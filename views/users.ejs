@@ -1,0 +1,27 @@
+<%- include("templates/header", {tituloWeb: 'Usuarios'}) %>
+<body>
+   <h1 class="text-center p-4"><%= title %></h1>
+   <div class="container p-4">
+      <div class="row">
+         <% if (users.length > 0) { %>
+            <% users.forEach( user => { %>
+               <div class="col-md-4 p-2">
+                  <div class="card">
+                     <div class="card-header">
+                        <%= user.NombreUser %> <%= user.ApellidoUser %> - <%= user.CedulaUser %> / <%= user.EdadUser %>
+                     </div>
+                     <div class="card-body">
+                        <%= user.EmailUser %> / <%= user.PasswordUser %>
+                     </div>
+                     <div class="card-footer justify-content-around">
+                        <a href="/borrar-user/<%= user.CedulaUser %>/admin" class="btn btn-danger"> Delete </a>
+                        <a href="/editar-user/<%= user.CedulaUser %>/admin" class="btn btn-warning"> Editar </a>
+                     </div>
+                  </div>
+               </div>
+            <% }) %>
+         <% } %>
+      </div>
+   </div>
+</body>
+<%- include("templates/footer") %>

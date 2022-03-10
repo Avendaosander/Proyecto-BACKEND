@@ -1,0 +1,35 @@
+<%- include("templates/header", {tituloWeb: 'Pagina de Inicio'}) %>
+<body>
+   <h1 class="text-center p-2">Proyecto Backend</h1>
+   <h4 class="text-center p-2"><%= title %></h4>
+   <div class="container p-4 text-center">
+      <% if (rol == 'user') { %> 
+         <div class="row">
+            <div class="col">
+               <a href="/crear-cita/:user" class="btn btn-info">Crear Cita</a>
+            </div>
+            <div class="col">
+               <a href="/citas/:user" class="btn btn-primary">Ver Citas</a>
+            </div>
+            <!-- <a href="" class="btn btn-success">Mis Citas</a> -->
+         </div>
+      <% } %> 
+      <% if (rol == 'admin') { %> 
+         <div class="row">
+            <div class="col">
+               <a href="/crear-cita/:admin" class="btn btn-info">Crear Cita</a>
+            </div>
+            <div class="col">
+               <a href="/citas/:admin" class="btn btn-primary">Ver Citas</a>
+            </div>
+            <div class="col">
+               <a href="/users/:admin" class="btn btn-warning">Editar Usuarios</a>
+            </div>
+            <div class="col">
+               <a href="/users/:admin" class="btn btn-danger">Eliminar Usuarios</a>
+            </div>
+         </div>
+      <% } %> 
+   </div>
+</body>
+<%- include("templates/footer") %>
