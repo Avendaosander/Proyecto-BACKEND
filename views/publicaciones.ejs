@@ -3,23 +3,29 @@
    <h1 class="text-center p-4"><%= title %></h1>
    <div class="container p-4">
       <div class="row">
-         <% if (citas.length > 0) { %>
-            <% citas.forEach( cita => { %>
-               <div class="col-md-4 p-2">
-                  <div class="card">
-                     <div class="card-header">
-                        <%= cita.NombreCita %> <%= cita.ApellidoCita %> - <%= cita.CedulaCita %>
-                     </div>
-                     <div class="card-body">
-                        <%= cita.EdadCita %> / <%= cita.FechaCita %> / <%= cita.HoraCita %>
-                     </div>
-                     <div class="card-footer justify-content-around">
-                        <a href="/borrar-cita/<%= cita.CedulaCita %>/<%= rol %>" class="btn btn-danger"> Delete </a>
-                        <a href="/editar-cita/<%= cita.CedulaCita %>/<%= rol %>" class="btn btn-warning"> Editar </a>
+         <% if (typeof publicaciones !== 'undefined') { %>
+            <% if (publicaciones.length > 0) { %>
+               <% publicaciones.forEach( publicacion => { %>
+                  <div class="col-md-4 p-2">
+                     <div class="card">
+                        <div class="card-header">
+                           <%= publicacion.NombrePublicacion %> <%= publicacion.ApellidoPublicacion %> - <%= publicacion.CedulaPublicacion %>
+                        </div>
+                        <div class="card-body">
+                           <%= publicacion.EdadPublicacion %> / <%= publicacion.FechaPublicacion %> / <%= publicacion.HoraPublicacion %>
+                        </div>
+                        <div class="card-footer justify-content-around">
+                           <a href="/borrar-publicacion/<%= publicacion.CedulaPublicacion %>/<%= rol %>" class="btn btn-danger"> Delete </a>
+                           <a href="/editar-publicacion/<%= publicacion.CedulaPublicacion %>/<%= rol %>" class="btn btn-warning"> Editar </a>
+                        </div>
                      </div>
                   </div>
-               </div>
-            <% }) %>
+               <% }) %>
+            <% } else {%>
+               <div class="container">No hay publicaciones creadas</div>
+            <% } %>
+         <% } else { %>
+            <div class="container">No hay publicaciones para ver</div>
          <% } %>
       </div>
    </div>

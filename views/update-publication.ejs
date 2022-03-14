@@ -2,32 +2,32 @@
 <body>
   <h1 class="text-center p-4"><%= title %></h1>
    <div class="container p-4">
-      <form target="/editar-cita/admin<% citas.CedulaCita %> " method="POST" class="card card-body">
+      <form target="/editar-publicacion/<% publicaciones.CedulaPublicacion %>/<%= rol %> " method="POST" class="card card-body">
          <div class="form-group p-2">
             <label for="nombre">Nombre</label>
-            <input id="nombre" type="text" value=<%= citas.NombreCita %> name="NombreCita" class="form-control" placeholder="Tú Nombre" required/>
+            <input id="nombre" type="text" value=<%= publicaciones.NombrePublicacion %> name="NombrePublicacion" class="form-control" placeholder="Tú Nombre" required/>
          </div>
          <div class="form-group p-2">
             <label for="apellido">Apellido</label>
-            <input id="apellido" type="text" value=<%= citas.ApellidoCita %> name="ApellidoCita" class="form-control" placeholder="Tú Apellido" required/>
+            <input id="apellido" type="text" value=<%= publicaciones.ApellidoPublicacion %> name="ApellidoPublicacion" class="form-control" placeholder="Tú Apellido" required/>
          </div>
          <div class="form-group p-2">
             <label for="cedula">Cedula</label>
-            <input id="cedula" type="number" value=<%= citas.CedulaCita %> name="CedulaCita" class="form-control" placeholder="Tú Cedula" required/>
+            <input id="cedula" type="number" value=<%= publicaciones.CedulaPublicacion %> name="CedulaPublicacion" class="form-control" placeholder="Tú Cedula" required/>
          </div>
          <div class="form-group p-2">
             <label for="edad">Edad</label>
-            <input id="edad" type="number" value=<%= citas.EdadCita %> min="6" max="85" name="EdadCita" class="form-control" placeholder="Tú Edad" required/>
+            <input id="edad" type="number" value=<%= publicaciones.EdadPublicacion %> min="6" max="85" name="EdadPublicacion" class="form-control" placeholder="Tú Edad" required/>
          </div>
          <div class="form-group p-2">
             <label for="fecha">Fecha</label>
-            <input id="fecha" type="date" value=<%= citas.FechaCita %> name="FechaCita" class="form-control" required/>
+            <input id="fecha" type="date" value=<%= publicaciones.FechaPublicacion %> name="FechaPublicacion" class="form-control" required/>
          </div>
          <div class="form-group p-2">
             <label for="hora">Hora</label>
-            <input id="hora" type="time" value=<%= citas.HoraCita %> name="HoraCita" class="form-control" required/>
+            <input id="hora" type="time" value=<%= publicaciones.HoraPublicacion %> name="HoraPublicacion" class="form-control" required/>
          </div>
-         <input type="submit" value="Guardar Cita" class="btn btn-primary">
+         <input type="submit" value="Guardar Publicacion" class="btn btn-primary">
       </form>
    </div>
 </body>

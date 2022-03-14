@@ -5,7 +5,7 @@ const { validarUser, validarCampos, validarUpdate, validarUpdateUser } = require
 
 /* GET Home page. */
 router.get('/home/:rol', function(req, res, next) {
-  if (req.params.rol === 'admin') {
+  if (req.params.rol == 'admin') {
     res.render('index', { title: 'Bienvenido', rol: req.params.rol });
   } else if (req.params.rol === 'user') {
     res.render('index', { title: 'Bienvenido', rol: req.params.rol });
@@ -55,7 +55,7 @@ router.get('/publicaciones/:rol', function(req, res, next) {
 });
 /* GET New Publication page. */
 router.get('/crear-publicacion/:rol', function(req, res, next) {
-  if (req.params.rol === 'admin') {
+  if (req.params.rol == 'admin') {
     res.render('new-publication', { title: 'Crear Publicación', rol: req.params.rol });
   } else if (req.params.rol === 'user') {
     res.render('new-publication', { title: 'Crear Publicación', rol: req.params.rol });
@@ -65,9 +65,9 @@ router.get('/crear-publicacion/:rol', function(req, res, next) {
 });
 router.post('/crear-publicacion/:rol', function(req, res, next) {
   if (req.params.rol === 'admin') {
-    res.render('publicaiones', { title: 'Publicaiones', rol: req.params.rol });
+    res.render('publicaciones', { title: 'Publicaiones', rol: req.params.rol });
   } else if (req.params.rol === 'user') {
-    res.render('publicaiones', { title: 'Publicaiones', rol: req.params.rol });
+    res.render('publicaciones', { title: 'Publicaiones', rol: req.params.rol });
   } else {
     res.render('error', { error: 'Rol invalido'})
   }
@@ -142,9 +142,9 @@ router.get('/borrar-usuario/:cedula/:rol', function(req, res, next) {
 /* GET Delete Publication page. */
 router.get('/borrar-publicacion/:cedula/:rol', function(req, res, next) {
   if (req.params.rol === 'admin') {
-    res.render('publicaiones', { title: 'Publicaciones', rol: req.params.rol });
+    res.render('publicaciones', { title: 'Publicaciones', rol: req.params.rol });
   } else if (req.params.rol === 'user') {
-    res.render('publicaiones', { title: 'Publicaciones', rol: req.params.rol });
+    res.render('publicaciones', { title: 'Publicaciones', rol: req.params.rol });
   } else {
     res.render('error', { error: 'Rol invalido'})
   }

@@ -1,7 +1,7 @@
 <%- include("templates/header", {tituloWeb: 'Iniciar Sesion'}) %>
 <body>
   <h1 class="text-center p-4"><%= title %></h1>
-   <div class="container p-4">
+   <div class="container">
       <div class="row">
          <div class="col">
             <h3 class="text-center">Usuario</h3>
@@ -19,7 +19,7 @@
             </form>
             <a href="/register/user" class="btn btn-outline-secondary m-3">Registrar como Usuario</a>
          </div>
-         <div class="col">
+         <div class="col ">
             <h3 class="text-center">Administrador</h3>
             <form target="/login/admin" method="POST" class="card card-body">
                <div class="form-group p-2">
