@@ -44,7 +44,7 @@ class User{
 
     //CREAR PUBLICACION
     CrearPublicacion(data){
-        publicaciones.create({
+        this.modeloPublicacion.create({
             NombreCita : data.NombreCita,
             ApellidoCita: data.ApellidoCita,
             CedulaCita: data.CedulaCita,
