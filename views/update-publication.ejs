@@ -2,31 +2,28 @@
 <body>
   <h1 class="text-center p-4"><%= title %></h1>
    <div class="container p-4">
-      <form target="/editar-publicacion/<% publicaciones.CedulaPublicacion %>/<%= rol %> " method="POST" class="card card-body">
+      <form target="/editar-publicacion/<% publicacion.Cedula %>/<%= rol %> " method="POST" class="card card-body">
          <div class="form-group p-2">
             <label for="nombre">Nombre</label>
-            <input id="nombre" type="text" value=<%= publicaciones.NombrePublicacion %> name="NombrePublicacion" class="form-control" placeholder="Tú Nombre" required/>
+            <input id="nombre" type="text" value=<%= publicacion.Nombre %> name="Nombre" class="form-control" placeholder="Tú Nombre" required/>
          </div>
          <div class="form-group p-2">
             <label for="apellido">Apellido</label>
-            <input id="apellido" type="text" value=<%= publicaciones.ApellidoPublicacion %> name="ApellidoPublicacion" class="form-control" placeholder="Tú Apellido" required/>
+            <input id="apellido" type="text" value=<%= publicacion.Apellido %> name="Apellido" class="form-control" placeholder="Tú Apellido" required/>
          </div>
          <div class="form-group p-2">
             <label for="cedula">Cedula</label>
-            <input id="cedula" type="number" value=<%= publicaciones.CedulaPublicacion %> name="CedulaPublicacion" class="form-control" placeholder="Tú Cedula" required/>
+            <input id="cedula" type="number" value=<%= publicacion.Cedula %> name="Cedula" class="form-control" placeholder="Tú Cedula" required/>
          </div>
          <div class="form-group p-2">
-            <label for="edad">Edad</label>
-            <input id="edad" type="number" value=<%= publicaciones.EdadPublicacion %> min="6" max="85" name="EdadPublicacion" class="form-control" placeholder="Tú Edad" required/>
+            <label for="titulo">Titulo</label>
+            <input id="titulo" type="text" value=<%= publicacion.Titulo %> name="Titulo" class="form-control" placeholder="Titulo" required/>
          </div>
          <div class="form-group p-2">
-            <label for="fecha">Fecha</label>
-            <input id="fecha" type="date" value=<%= publicaciones.FechaPublicacion %> name="FechaPublicacion" class="form-control" required/>
+            <label for="contenido">Contenido</label>
+            <input id="contenido" type="text" value=<%= publicacion.Contenido %> name="Contenido" class="form-control" placeholder="Contenido" required/>
          </div>
-         <div class="form-group p-2">
-            <label for="hora">Hora</label>
-            <input id="hora" type="time" value=<%= publicaciones.HoraPublicacion %> name="HoraPublicacion" class="form-control" required/>
-         </div>
+         <input id="contador" type="text" value=<%= publicacion.Contador %> hidden name="Contador" class="form-control" required/>
          <input type="submit" value="Guardar Publicacion" class="btn btn-primary">
       </form>
    </div>

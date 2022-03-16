@@ -2,46 +2,46 @@ const { DataTypes } = require('sequelize')
 
 module.exports = (connection) => {
    const admins = connection.define('admins', {
-      IDUser: {
+      ID: {
          type: DataTypes.INTEGER(11),
          allowNull: false,
          primaryKey: true,
          autoIncrement: true
       },
-      NombreUser: {
+      Nombre: {
          type: DataTypes.STRING(255),
          allowNull: false
       },
-      ApellidoUser: {
+      Apellido: {
          type: DataTypes.STRING(255),
          allowNull: false
       },
-      EmailUser: {
+      Email: {
          type: DataTypes.STRING(255),
          allowNull: false
       },
-      PasswordUser: {
+      Password: {
          type: DataTypes.STRING(255),
          allowNull: false
       },
-      CedulaUser: {
+      Cedula: {
          type: DataTypes.INTEGER(11),
          allowNull: false
       },
-      EdadUser: {
+      Edad: {
          type: DataTypes.INTEGER(2),
          allowNull: false
       },
-      TelefonoUser: {
-         type: DataTypes.STRING(255),
+      Telefono: {
+         type: DataTypes.STRING(1234),
          allowNull: false
       }
    },{
-      createdAt:"CreatedUserDate",
+      createdAt:"CreatedDate",
       indexes: [
          {
             unique: true,
-            fields:['CedulaUser']
+            fields:['Cedula']
          }
       ]
    })

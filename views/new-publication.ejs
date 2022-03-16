@@ -1,7 +1,7 @@
-<%- include("templates/header", {tituloWeb: 'Crear Cita'}) %>
+<%- include("templates/header", {tituloWeb: 'Crear Publicacion'}) %>
 <body>
   <h1 class="text-center p-4"><%= title %></h1>
-   <div class="container p-4">
+   <div class="container">
       <form target="/crear-publicacion/<%= rol %>" method="POST" class="card card-body">
          <div class="form-group p-2">
             <label for="nombre">Nombre</label>
@@ -16,16 +16,12 @@
             <input id="cedula" type="number" name="cedula" class="form-control" placeholder="Tú Cedula" required/>
          </div>
          <div class="form-group p-2">
-            <label for="edad">Edad</label>
-            <input id="edad" type="number" min="6" max="85" name="edad" class="form-control" placeholder="Tú Edad" required/>
+            <label for="titulo">Titulo</label>
+            <input id="titulo" type="text" name="titulo" class="form-control" placeholder="Titulo" required/>
          </div>
          <div class="form-group p-2">
-            <label for="fecha">Fecha</label>
-            <input id="fecha" type="date" name="fecha" class="form-control" required/>
-         </div>
-         <div class="form-group p-2">
-            <label for="hora">Hora</label>
-            <input id="hora" type="time" name="hora" class="form-control" required/>
+            <label for="contenido">Contenido</label>
+            <input id="contenido" type="text" name="contenido" class="form-control" placeholder="Contenido" required/>
          </div>
          <input type="submit" value="Guardar Publicacion" class="btn btn-primary">
       </form>

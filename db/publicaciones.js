@@ -1,45 +1,45 @@
 const { DataTypes } = require('sequelize')
 
 module.exports = (connection) => {
-   const citas = connection.define('citas', {
-      IDCita: {
+   const publicaciones = connection.define('publicaciones', {
+      ID: {
          type: DataTypes.INTEGER(11),
          allowNull: false,
          primaryKey: true,
          autoIncrement: true
       },
-      NombreCita: {
+      Nombre: {
          type: DataTypes.STRING(255),
          allowNull: false
       },
-      ApellidoCita: {
+      Apellido: {
          type: DataTypes.STRING(255),
          allowNull: false
       },
-      CedulaCita: {
+      Cedula: {
          type: DataTypes.INTEGER(11),
          allowNull: false
       },
-      EdadCita: {
-         type: DataTypes.INTEGER(2),
+      Titulo: {
+         type: DataTypes.STRING(255),
          allowNull: false
       },
-      FechaCita: {
-         type: DataTypes.DATEONLY(11),
+      Contenido: {
+         type: DataTypes.STRING(255),
          allowNull: false
       },
-      HoraCita: {
-         type: DataTypes.TIME(11),
+      Contador: {
+         type: DataTypes.INTEGER(11),
          allowNull: false
       }
    },{
-      createdAt:"CreatedCitaDate",
+      createdAt:"CreatedDate",
       indexes: [
          {
             unique: true,
-            fields:['CedulaCita']
+            fields:['Cedula']
          }
       ]
    })
-   return { citas }
+   return { publicaciones }
 }

@@ -9,14 +9,14 @@
                   <div class="col-md-4 p-2">
                      <div class="card">
                         <div class="card-header">
-                           <%= user.NombreUser %> <%= user.ApellidoUser %> - <%= user.CedulaUser %> / <%= user.EdadUser %>
+                           <%= user.Nombre %> <%= user.Apellido %> - <%= user.Cedula %> / <%= user.Edad %>
                         </div>
                         <div class="card-body">
-                           <%= user.EmailUser %> / <%= user.PasswordUser %>
+                           <%= user.Email %>
                         </div>
                         <div class="card-footer justify-content-around">
-                           <a href="/borrar-usuario/<%= user.CedulaUser %>/admin" class="btn btn-danger"> Delete </a>
-                           <a href="/editar-usuario/<%= user.CedulaUser %>/admin" class="btn btn-warning"> Editar </a>
+                           <a href="/borrar-usuario/<%= user.Cedula %>/admin" class="btn btn-danger"> Delete </a>
+                           <a href="/editar-usuario/<%= user.Cedula %>/admin" class="btn btn-warning"> Editar </a>
                         </div>
                      </div>
                   </div>

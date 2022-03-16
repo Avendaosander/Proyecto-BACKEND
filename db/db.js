@@ -1,7 +1,7 @@
 const { Sequelize, Op, fn } = require("sequelize");
-const PublicaionesModel = require('./publicaiones')
-const UsersModel = require('./user')
+const PublicacionesModel = require('./publicaciones')
 const AdminsModel = require('./admin')
+const UsersModel = require('./user')
 
 const config = {
    HOST: process.env.DB_HOST,
@@ -22,16 +22,16 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD,{
    dialect: config.dialect,
    operatorsAliases: 0,
    pool: config.pool,
-   // storage: './proyect_backend_db.sql'
+   storage: './proyect.sql'
 })
 
 sequelize.sync({force: process.env.DB_FORCE === "false"}) /* Se debe corregir */
 
 module.exports = {
    database: sequelize,
-   tablesCitas: PublicaionesModel(sequelize),
-   tablesUsers: UsersModel(sequelize),
+   tablesPosts: PublicacionesModel(sequelize),
    tablesAdmins: AdminsModel(sequelize),
+   tablesUsers: UsersModel(sequelize),
    op: Op,
    fn: fn
 }

@@ -9,14 +9,14 @@
                   <div class="col-md-4 p-2">
                      <div class="card">
                         <div class="card-header">
-                           <%= publicacion.NombrePublicacion %> <%= publicacion.ApellidoPublicacion %> - <%= publicacion.CedulaPublicacion %>
+                           <%= publicacion.Nombre %> <%= publicacion.Apellido %> - <%= publicacion.Cedula %>
                         </div>
                         <div class="card-body">
-                           <%= publicacion.EdadPublicacion %> / <%= publicacion.FechaPublicacion %> / <%= publicacion.HoraPublicacion %>
+                           <%= publicacion.Titulo %> / <%= publicacion.Contenido %> / <%= publicacion.CreatedDate %>
                         </div>
                         <div class="card-footer justify-content-around">
-                           <a href="/borrar-publicacion/<%= publicacion.CedulaPublicacion %>/<%= rol %>" class="btn btn-danger"> Delete </a>
-                           <a href="/editar-publicacion/<%= publicacion.CedulaPublicacion %>/<%= rol %>" class="btn btn-warning"> Editar </a>
+                           <a href="/borrar-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-danger"> Delete </a>
+                           <a href="/editar-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-warning"> Editar </a>
                         </div>
                      </div>
                   </div>
