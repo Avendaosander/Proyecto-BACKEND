@@ -8,11 +8,11 @@
                <% publicaciones.forEach( publicacion => { %>
                   <div class="col-md-4 p-2">
                      <div class="card">
-                        <div class="card-header">
-                           <%= publicacion.Nombre %> <%= publicacion.Apellido %> - <%= publicacion.Cedula %>
-                        </div>
+                        <div class="card-header">Titulo: <%= publicacion.Titulo %></div>
                         <div class="card-body">
-                           <%= publicacion.Titulo %> / <%= publicacion.Contenido %> / <%= publicacion.CreatedDate %>
+                           <div class="col m-1"><%= publicacion.Contenido %></div>
+                           <div class="col m-1">Fecha: <%= publicacion.CreatedDate %></div>
+                           <div class="col m-1">Autor: <%= publicacion.Nombre %> <%= publicacion.Apellido %> / C.I: <%= publicacion.Cedula %></div>
                         </div>
                         <div class="card-footer justify-content-around">
                            <a href="/borrar-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-danger"> Delete </a>

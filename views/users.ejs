@@ -8,11 +8,12 @@
                <% users.forEach( user => { %>
                   <div class="col-md-4 p-2">
                      <div class="card">
-                        <div class="card-header">
-                           <%= user.Nombre %> <%= user.Apellido %> - <%= user.Cedula %> / <%= user.Edad %>
-                        </div>
+                        <div class="card-header text-center">Usuario: <%= user.ID %></div>
                         <div class="card-body">
-                           <%= user.Email %>
+                           <div class="col">Nombre: <%= user.Nombre %> <%= user.Apellido %></div>
+                           <div class="col">Cedula: <%= user.Cedula %></div>
+                           <div class="col">Edad: <%= user.Edad %></div>
+                           <div class="col">Email: <%= user.Email %></div>
                         </div>
                         <div class="card-footer justify-content-around">
                            <a href="/borrar-usuario/<%= user.Cedula %>/admin" class="btn btn-danger"> Delete </a>

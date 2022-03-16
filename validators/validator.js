@@ -24,11 +24,10 @@ const validarCampos = [
       .isLength({min: 3}),
    body('cedula', "Ingrese su cedula")
       .exists(),
-   body('edad', "Ingrese su edad")
-      .exists(),
-   body('fecha', "Ingrese la fecha de su cita")
-      .exists(),
-   body('hora', "Ingrese la hora de su cita")
+   body('titulo', "Ingrese el titulo")
+      .exists()
+      .isLength({min: 8}),
+   body('contenido', "Ingrese el contenido de su publicacion")
       .exists(),
    (req,res,next) => {
       validationCreate(req, res, next)
@@ -64,46 +63,14 @@ const validarUser = [
       .exists()
       .isEmail(),
    body('password', 'Ingrese una Contraseña valida')
-      .exists()
-      .isStrongPassword()
-]
-
-const validarUpdate = [
-   body('NombreCita', "Ingrese el nombre")
-      .exists()
-      .custom( value => {
-         if (/^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ\s]+$/g.test(value)) {
-            return true
-         } else {
-            throw new Error('El nombre no es valido, ingrese solo letras')
-         }
-      })
-      .isLength({min: 3}),
-   body('ApellidoCita', "Ingrese el apellido")
-      .exists()
-      .custom( value => {
-         if (/^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ\s]+$/g.test(value)) {
-            return true
-         } else {
-            throw new Error('El apellido no es valido, ingrese solo letras')
-         }
-      })
-      .isLength({min: 3}),
-   body('CedulaCita', "Ingrese su cedula")
-      .exists(),
-   body('EdadCita', "Ingrese su edad")
-      .exists(),
-   body('FechaCita', "Ingrese la fecha de su cita")
-      .exists(),
-   body('HoraCita', "Ingrese la hora de su cita")
       .exists(),
    (req,res,next) => {
       validationCreate(req, res, next)
    }
 ]
 
-const validarUpdateUser = [
-   body('nombre', "Ingrese el nombre")
+const validarUpdate = [
+   body('Nombre', "Ingrese el nombre")
       .exists()
       .custom( value => {
          if (/^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ\s]+$/g.test(value)) {
@@ -113,7 +80,7 @@ const validarUpdateUser = [
          }
       })
       .isLength({min: 3}),
-   body('apellido', "Ingrese el apellido")
+   body('Apellido', "Ingrese el apellido")
       .exists()
       .custom( value => {
          if (/^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ\s]+$/g.test(value)) {
@@ -123,16 +90,51 @@ const validarUpdateUser = [
          }
       })
       .isLength({min: 3}),
-   body('cedula', "Ingrese su cedula")
+   body('Cedula', "Ingrese su cedula")
       .exists(),
-   body('edad', "Ingrese su edad")
+   body('Titulo', "Ingrese el titulo")
+      .exists()
+      .isLength({min: 8}),
+   body('Contenido', "Ingrese el contenido de su publicacion")
       .exists(),
-   body('email', 'Ingrese un Email valido')
-      .exists()
-      .isEmail(),
-   body('password', 'Ingrese una Contraseña valida')
-      .exists()
-      .isStrongPassword()
+   (req,res,next) => {
+      validationCreate(req, res, next)
+   }
 ]
 
-module.exports = { validarUser, validarCampos, validarUpdate, validarUpdateUser }
+const validarUserUpdate = [
+   body('Nombre', "Ingrese el nombre")
+      .exists()
+      .custom( value => {
+         if (/^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ\s]+$/g.test(value)) {
+            return true
+         } else {
+            throw new Error('El nombre no es valido, ingrese solo letras')
+         }
+      })
+      .isLength({min: 3}),
+   body('Apellido', "Ingrese el apellido")
+      .exists()
+      .custom( value => {
+         if (/^[A-Za-zñÑáéíóúÁÉÍÓÚüÜ\s]+$/g.test(value)) {
+            return true
+         } else {
+            throw new Error('El apellido no es valido, ingrese solo letras')
+         }
+      })
+      .isLength({min: 3}),
+   body('Cedula', "Ingrese su cedula")
+      .exists(),
+   body('Edad', "Ingrese su edad")
+      .exists(),
+   body('Email', 'Ingrese un Email valido')
+      .exists()
+      .isEmail(),
+   body('Password', 'Ingrese una Contraseña valida')
+      .exists(),
+   (req,res,next) => {
+      validationCreate(req, res, next)
+   }
+]
+
+module.exports = { validarUser, validarCampos, validarUpdate, validarUserUpdate }

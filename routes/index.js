@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require("bcryptjs"); /* Para encriptar contraseñas */
-const { validarUser, validarCampos, validarUpdate, validarUpdateUser } = require('../validators/validator') /* Validaciones */
+const { validarUser, validarCampos, validarUpdate, validarUserUpdate } = require('../validators/validator') /* Validaciones */
 const { tablesUsers, tablesPosts, tablesAdmins } = require('../db/db');
 
 /* GET Home page. */
@@ -104,9 +104,9 @@ router.post('/register/:rol', validarUser, (req, res) => {
 router.get('/users/:rol', (req, res) => {
   if (req.params.rol === 'admin' || req.params.rol === 'user') {
     tablesUsers.users.findAll({
-      attributes: [ 'Nombre','Apellido','Cedula','Edad','Email','Password' ],
+      attributes: [ 'ID', 'Nombre','Apellido','Cedula','Edad','Email','Password' ],
       order: [
-        ['Cedula', 'DESC']
+        ['ID', 'ASC']
       ],
       raw: true
     }).then((useData)=>{
@@ -125,7 +125,7 @@ router.get('/publicaciones/:rol', (req, res) => {
     tablesPosts.publicaciones.findAll({
       attributes: [ 'Nombre','Apellido','Cedula','Titulo','Contenido', 'Contador', 'CreatedDate' ],
       order: [
-        ['Titulo', 'DESC']
+        ['Titulo', 'ASC']
       ],
       raw: true
     }).then((publicacionData)=>{
@@ -148,7 +148,7 @@ router.get('/crear-publicacion/:rol', (req, res) => {
     res.render('error', { error: 'Rol invalido'})
   }
 });
-router.post('/crear-publicacion/:rol', (req, res) => {
+router.post('/crear-publicacion/:rol', validarCampos, (req, res) => {
   const { nombre, apellido, cedula, titulo, contenido } = req.body
   const CitaClass = { nombre, apellido, cedula, titulo, contenido }
   if (req.params.rol === 'admin' || req.params.rol === 'user') {
@@ -199,7 +199,7 @@ router.get('/editar-publicacion/:cedula/:rol', (req, res) => {
     res.render('error', { error: 'Rol invalido'})
   }
 });
-router.post('/editar-publicacion/:cedula/:rol', async (req, res, next) => {
+router.post('/editar-publicacion/:cedula/:rol', validarUpdate, async (req, res, next) => {
   if (req.params.rol === 'admin' || req.params.rol === 'user') {
     await tablesPosts.publicaciones.update(req.body, {
       where: { Cedula: req.params.cedula }
@@ -225,7 +225,7 @@ router.get('/editar-usuario/:cedula/:rol', (req, res) => {
     res.render('error', { error: 'Rol invalido'})
   }
 });
-router.post('/editar-usuario/:cedula/:rol', async (req, res, next) => {
+router.post('/editar-usuario/:cedula/:rol', validarUserUpdate, async (req, res, next) => {
   if (req.params.rol === 'admin') {
     await tablesUsers.users.update(req.body, {
       where: { Cedula: req.params.cedula }
