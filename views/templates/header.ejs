@@ -41,10 +41,13 @@
                <ul class="navbar-nav">
                   <% if (rol == 'user') { %> 
                      <li class="nav-item">
-                     <a class="nav-link text-white" href="/crear-publicacion/<%= rol %>">Crear Publicacion</a>
+                        <a class="nav-link text-white" href="/crear-publicacion/<%= rol %>">Crear Publicacion</a>
                      </li>
                      <li class="nav-item">
-                     <a class="nav-link text-white" href="/publicaciones/<%= rol %>">Ver Publicaciones</a>
+                        <a class="nav-link text-white" href="/publicaciones/<%= rol %>">Ver Publicaciones</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link text-white" href="#">Cerrar Sesión</a>
                      </li>
                   <% } %> 
                   <% if (rol == 'admin') { %> 

@@ -1,5 +1,5 @@
 const users = require('../db/user');
-const publicaciones = require('../db/publicaiones');
+const publicaciones = require('../db/publicaciones');
 
 class User{
     constructor(data){
