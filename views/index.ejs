@@ -1,37 +1,38 @@
 <%- include("templates/header", {tituloWeb: 'Pagina de Inicio'}) %>
 <body>
-   <h1 class="text-center m-4">Proyecto Backend</h1>
-   <h3 class="text-center m-2"><%= title %></h3>
-   <div class="container p-4 text-center">
-      <% if (rol == 'user') { %> 
-         <div class="row">
-            <div class="col">
-               <a href="/crear-publicacion/<%= rol %> " class="btn btn-info">Crear Publicacion</a>
-            </div>
-            <div class="col">
-               <a href="/publicaciones/<%= rol %> " class="btn btn-primary">Ver Publicaciones</a>
-            </div>
-            <!-- <div class="col">
-               <a href="/publicaciones/" class="btn btn-success">Mis Publicaciones</a>
-            </div> -->
-         </div>
-      <% } %> 
-      <% if (rol == 'admin') { %> 
-         <div class="row">
-            <div class="col">
-               <a href="/crear-publicacion/<%= rol %> " class="btn btn-info">Crear Publicacion</a>
-            </div>
-            <div class="col">
-               <a href="/publicaciones/<%= rol %> " class="btn btn-primary">Ver Publicaciones</a>
-            </div>
-            <div class="col">
-               <a href="/users/<%= rol %> " class="btn btn-warning">Editar Usuarios</a>
-            </div>
-            <div class="col">
-               <a href="/users/<%= rol %> " class="btn btn-danger">Eliminar Usuarios</a>
-            </div>
-         </div>
-      <% } %> 
+   <h2 class="text-center mt-5">Publicaciones más relevantes</h2>
+   <div class="container p-2">
+      <div class="row">
+         <% if (typeof publicaciones !== 'undefined') { %>
+            <% if (publicaciones.length > 0) { %>
+               <% publicaciones.forEach( publicacion => { %>
+                  <div class="col-md-4 p-2">
+                     <div class="card">
+                        <div class="card-header">Titulo: <%= publicacion.Titulo %></div>
+                        <div class="card-body">
+                           <div class="col m-1"><%= publicacion.Contenido %></div>
+                           <div class="col m-1">Fecha: <%= publicacion.CreatedDate %></div>
+                           <div class="col m-1">Autor: <%= publicacion.Nombre %> <%= publicacion.Apellido %> / C.I: <%= publicacion.Cedula %></div>
+                        </div>
+                        <% if (rol == 'admin') { %>
+                           <div class="card-footer">
+                              <div class="nav justify-content-around">
+                                 <a href="#" class="btn btn-primary"> Ver </a>
+                                 <a href="/editar-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-warning"> Editar </a>
+                                 <a href="/borrar-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-danger"> Borrar </a>
+                              </div>
+                           </div>
+                        <% } %>
+                     </div>
+                  </div>
+               <% }) %>
+            <% } else {%>
+               <div class="container">No hay publicaciones creadas</div>
+            <% } %>
+         <% } else { %>
+            <div class="container">No hay publicaciones para ver</div>
+         <% } %>
+      </div>
    </div>
 </body>
 <%- include("templates/footer") %>

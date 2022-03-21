@@ -1,7 +1,7 @@
 <%- include("templates/header", {tituloWeb: 'Usuarios'}) %>
 <body>
-   <h1 class="text-center p-4"><%= title %></h1>
-   <div class="container p-4">
+   <h2 class="text-center mt-5"><%= title %></h2>
+   <div class="container p-2">
       <div class="row">
          <% if (typeof users !== 'undefined') { %>
             <% if (users.length > 0) { %>
@@ -15,9 +15,11 @@
                            <div class="col">Edad: <%= user.Edad %></div>
                            <div class="col">Email: <%= user.Email %></div>
                         </div>
-                        <div class="card-footer justify-content-around">
-                           <a href="/borrar-usuario/<%= user.Cedula %>/admin" class="btn btn-danger"> Delete </a>
-                           <a href="/editar-usuario/<%= user.Cedula %>/admin" class="btn btn-warning"> Editar </a>
+                        <div class="card-footer">
+                           <div class="nav justify-content-around">
+                              <a href="/borrar-usuario/<%= user.Cedula %>/admin" class="btn btn-danger"> Delete </a>
+                              <a href="/editar-usuario/<%= user.Cedula %>/admin" class="btn btn-warning"> Editar </a>
+                           </div>
                         </div>
                      </div>
                   </div>

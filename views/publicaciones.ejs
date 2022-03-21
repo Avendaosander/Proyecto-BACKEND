@@ -1,7 +1,7 @@
 <%- include("templates/header", {tituloWeb: 'Publicaciones'}) %>
 <body>
-   <h1 class="text-center p-4"><%= title %></h1>
-   <div class="container p-4">
+   <h2 class="text-center mt-5"><%= title %></h2>
+   <div class="container p-2">
       <div class="row">
          <% if (typeof publicaciones !== 'undefined') { %>
             <% if (publicaciones.length > 0) { %>
@@ -14,10 +14,15 @@
                            <div class="col m-1">Fecha: <%= publicacion.CreatedDate %></div>
                            <div class="col m-1">Autor: <%= publicacion.Nombre %> <%= publicacion.Apellido %> / C.I: <%= publicacion.Cedula %></div>
                         </div>
-                        <div class="card-footer justify-content-around">
-                           <a href="/borrar-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-danger"> Delete </a>
-                           <a href="/editar-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-warning"> Editar </a>
-                        </div>
+                        <% if (rol == 'admin') { %>
+                           <div class="card-footer">
+                              <div class="nav justify-content-around">
+                                 <a href="#" class="btn btn-primary"> Ver </a>
+                                 <a href="/editar-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-warning"> Editar </a>
+                                 <a href="/borrar-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-danger"> Borrar </a>
+                              </div>
+                           </div>
+                        <% } %>
                      </div>
                   </div>
                <% }) %>

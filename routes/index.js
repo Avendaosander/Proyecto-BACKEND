@@ -6,10 +6,19 @@ const { tablesUsers, tablesPosts, tablesAdmins } = require('../db/db');
 
 /* GET Home page. */
 router.get('/home/:rol', (req, res) => {
-  if (req.params.rol == 'admin') {
-    res.render('index', { title: 'Administrador', rol: req.params.rol });
-  } else if (req.params.rol === 'user') {
-    res.render('index', { title: 'Usuario', rol: req.params.rol });
+  if (req.params.rol === 'admin' || req.params.rol === 'user') {
+    tablesPosts.publicaciones.findAll({
+      attributes: [ 'Nombre','Apellido','Cedula','Titulo','Contenido', 'Contador', 'CreatedDate' ],
+      order: [
+        ['Titulo', 'ASC']
+      ],
+      raw: true
+    }).then((publicacionData)=>{
+      // console.log(publicacionData)
+      res.status(200).render('index', { publicaciones: publicacionData, error: '', rol: req.params.rol });
+    }).catch((err)=>{
+      res.render('error', { publicaciones: [], error: err });
+    })
   } else {
     res.render('error', { error: 'Rol invalido'})
   }
@@ -25,7 +34,7 @@ router.post('/login', (req, res) => {
     }).then(([userData])=>{
       bcrypt.compare(req.body.Password, userData.dataValues.Password, function(err, resp) {
         if (resp) {
-          res.status(200).render('index', { title: "Administrador", rol: req.body.rol});
+          res.status(200).render('index', { rol: req.body.rol});
         } else {
           res.status(500).render('error', { user:'', users: [], error: 'Contraseña es incorrecta' });
         }
@@ -39,7 +48,7 @@ router.post('/login', (req, res) => {
     }).then(([userData])=>{
       bcrypt.compare(req.body.Password, userData.dataValues.Password, function(err, resp) {
         if (resp) {
-          res.status(200).render('index', { title: "Usuario", rol: req.body.rol});
+          res.status(200).render('index', { rol: req.body.rol});
         } else {
           res.status(500).render('error', { user:'', users: [], error: 'Contraseña es incorrecta' });
         }
@@ -70,7 +79,7 @@ router.post('/register/:rol', validarUser, (req, res) => {
       }
     }).then(([user, created])=>{
       if (created) {
-        res.status(200).render('index', { title: 'Administrador', rol: req.params.rol});
+        res.status(200).render('index', { rol: req.params.rol});
       } else {
         res.status(400).render('register', { title: 'Registrar un nuevo Administrador', error: 'El Administrador de cedula: '+user.dataValues.Cedula+' ya está registrado en el sistema' });
       }
@@ -89,7 +98,7 @@ router.post('/register/:rol', validarUser, (req, res) => {
       }
     }).then(([user, created])=>{
       if (created) {
-        res.status(200).render('index', { title: 'Usuario', rol: req.params.rol});
+        res.status(200).render('index', { rol: req.params.rol});
       } else {
         res.status(400).render('register', { title: 'Registrar un nuevo usuario', error: 'El usuario de cedula: '+user.dataValues.Cedula+' ya está registrado en el sistema' });
       }
@@ -130,7 +139,7 @@ router.get('/publicaciones/:rol', (req, res) => {
       raw: true
     }).then((publicacionData)=>{
       // console.log(publicacionData)
-      res.status(200).render('publicaciones', { title: 'Publicaciones', publicaciones: publicacionData, error: '', rol: req.params.rol});
+      res.status(200).render('publicaciones', { title: 'Publicaciones', publicaciones: publicacionData, error: '', rol: req.params.rol });
     }).catch((err)=>{
       res.render('error', { publicaciones: [], error: err });
     })
@@ -204,7 +213,7 @@ router.post('/editar-publicacion/:cedula/:rol', validarUpdate, async (req, res, 
     await tablesPosts.publicaciones.update(req.body, {
       where: { Cedula: req.params.cedula }
     })
-    res.status(200).render('index', { title: 'Administrador', rol: req.params.rol})
+    res.status(200).render('index', { rol: req.params.rol})
   } else {
     res.render('error', { error: 'Rol invalido'})
   }
@@ -230,7 +239,7 @@ router.post('/editar-usuario/:cedula/:rol', validarUserUpdate, async (req, res, 
     await tablesUsers.users.update(req.body, {
       where: { Cedula: req.params.cedula }
     })
-    res.status(200).render('index', { title: 'Administrador', rol: req.params.rol})
+    res.status(200).render('index', { rol: req.params.rol})
   } else if (req.params.rol === 'user') {
     res.render('error', { error: 'Eres un usuario, no puedes Editar otro usuario'})
   } else {
@@ -243,7 +252,7 @@ router.get('/borrar-usuario/:cedula/:rol', async(req, res, next) => {
     await tablesUsers.users.destroy({
       where: { Cedula: req.params.cedula }
     })
-    res.status(200).render('index', { title: 'Administrador', rol: req.params.rol})
+    res.status(200).render('index', { rol: req.params.rol})
   } else if (req.params.rol === 'user') {
     res.render('error', { error: 'Eres un usuario, no puedes borrar otro usuario'})
   } else {
@@ -256,7 +265,7 @@ router.get('/borrar-publicacion/:cedula/:rol', async (req, res, next) => {
     await tablesPosts.publicaciones.destroy({
       where: { Cedula: req.params.cedula }
     })
-    res.status(200).render('index', { title: 'Administrador', rol: req.params.rol})
+    res.status(200).render('index', { rol: req.params.rol})
   } else if (req.params.rol === 'user') {
     res.render('error', { error: 'Eres un usuario, no puedes borrar otra publicacion'})
   } else {
