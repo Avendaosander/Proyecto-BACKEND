@@ -1,84 +1,154 @@
+const admin = require('../db/admin');
 const modeloAdm = require('../db/admin');
 const {User} = require('./classUser');
 
 class Admin extends User{
-    constructor(data){
-        super(data);
+    constructor(){
+        super();
         this.modeloAdm=modeloAdm;
-        this.telefono = data.telefono;
+        this.telefono = null;
     }
 
-    async agregarAdmin(){
+    async agregarAdmin(data){
         let findAdm = await this.modeloAdm.findAll({
             where : {
-                NombreUser : this.nombre,
-                PasswordUser : this.password
+                Nombre : data.nombre,
+                Password : data.password
             },
-            attributes:['NombreUser', 'PasswordUser']
+            attributes:['Nombre', 'Password']
         })
     
         if(findAdm[0] === undefined){
             this.modeloAdm.create({
-                NombreUser : this.nombre,
-                ApellidoUser: this.apellido,
-                EmailUser:this.email,
-                PasswordUser:this.password,
-                CedulaUser:this.cedula,
-                EdadUser: this.edad,
-                TelefonoUser:this.telefono
+                Nombre: data.nombre,
+                Apellido: data.apellido,
+                Email:data.email,
+                Password:data.password,
+                Cedula:data.cedula,
+                Edad: data.edad,
+                Telefono:data.telefono
             },{
-                fields: ['NombreUser', 'ApellidoUser','EmailUser', 'PasswordUser', 'CedulaUser','EdadUser','TelefonoUser']
+                fields: ['Nombre', 'Apellido','Email', 'Password', 'Cedula','Edad','Telefono']
             })
         }else{
-            res.json({
-                mensaje : 'El administrador que desea agreagar ya existe',
-                usuario: findAdm
-            })
+            return false;
         }
     }
 
+    //BUSCAR ADMIN
+    async buscarAdm(correo){
+        let adm = await this.modeloAdm.findAll({
+            where:{
+                Email : correo
+            }
+        })
+        if(adm){
+            return admin;
+        }else{
+            return false;
+        }
+    }
+
+    //buscar user
+    async buscarUser(correo){
+        let usuario = await this.modeloUser.findAll({
+            where:{
+                Email : correo
+            }
+        })
+        if(usuario){
+            return usuario;
+        }
+        else{
+            return false;
+        }
+    }
+    //ver usuarios 
+    async ListarUser(){
+        let usuarios = await this.modeloUser.findAll({
+            attributes : ['Nombre', 'Apellido','Email', 'Password', 'Cedula','Edad']
+        })
+        return usuarios;
+    }
     //EDITAR DATOS 
-    async editarPublicacion(id, dataNew){
+    async editarPublicacion(titulo, dataNew){
         let busquedaPublicacion = await this.modeloPublicacion.findAll({
             where: {
-                IDCita: id
+                Titulo: titulo
             }
         });
         if(busquedaPublicacion[0] === undefined){
-            //la pagina no existe
+            return false;
         }
         const dataUpdate = await this.modeloPublicacion.update({
-            NombreUser : dataNew.NombreUser,
-            ApellidoUser: dataNew.ApellidoUser,
-            EmailUser: dataNew.EmailUser,
-            PasswordUser: dataNew.PasswordUser,
-            CedulaUser: dataNew.CedulaUser,
-            EdadUser: dataNew.EdadUser,
-            TelefonoUser: dataNew.TelefonoUser
+            Nombre : dataNew.nombre,
+            Apellido: dataNew.apellido,
+            Cedula: dataNew.cedula,
+            Titulo: dataNew.titulo,
+            Contenido: dataNew.contenido
         },{
             where :{
-                IDCita : id
+                Titulo : titulo
             }
         });
     
         if(dataUpdate){
-            //se actualizo
+            return dataUpdate;
         }else{
-            // no se actualizo
+            return false;
+        }
+    }
+
+    //editar Usuario
+
+    async editarUser(correo,data){
+        let usuarioUP = await this.modeloUser.findAll({
+            where:{
+                Email:correo
+            }
+        })
+        if(!usuarioUP){
+            return false;
+        }
+        let usuarioUpdate = this.modeloUser.update({
+            Nombre : data.nombre,
+            Apellido: data.apellido,
+            Email:data.email,
+            Password:data.password,
+            Cedula:data.cedula,
+            Edad: data.edad
+        })
+        if(usuarioUpdate){
+            return usuarioUpdate;
+        }else{
+            return false;
         }
     }
 
     //eliminar
-    async eliminarPublicacion(id){
+    async eliminarPublicacion(titulo){
         let DataDeleted = await this.modeloPublicacion.destroy({
             where: {
-                IDCita : id
+                Titulo : titulo
             }
         });
         if(DataDeleted > 0){
             //se elimino
         }else{
             //no se elimino
+        }
+    }
+    //eliminar User
+    async deleteUser(correo){
+        let userDeleted = await this.modeloUser.destroy({
+            where:{
+                Email : correo
+            }
+        })
+        if(userDeleted){
+            return true;
+        }else{
+            return false;
         }
     }
 }
