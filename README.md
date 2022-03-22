@@ -13,7 +13,7 @@ Es un programa de visualización de publicaciones, donde cada usuario debe regis
 ### Funcionamiento
 **rol ( admin o user )**
 
-Inicia Sesion en el caso de tener una cuenta ( /login )
+Inicia Sesion en el caso de tener una cuenta ( /iniciar/login )
 Registrarse en caso de no tenerla ( /register )
 Entra en la pagina principal ( /:rol )
 Muestra las publicaciones más relevantes
