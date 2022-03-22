@@ -12,6 +12,8 @@ ASAL es un proyecto de BACKEND para la Universidad Valle del Momboy (UVM), el cu
 
 Es un programa de visualización de publicaciones, donde cada usuario debe registrarse para poder acceder a las funciones que ofrece la página
 
+Para mas detalles pueden ver el Video tutorial del proyecto [AQUI](https://youtu.be/vP9x6dFSatc)
+
 ### Funcionamiento
 **rol ( admin o user )**
 
