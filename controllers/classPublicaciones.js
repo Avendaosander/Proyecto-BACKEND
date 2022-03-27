@@ -1,4 +1,4 @@
-const modeloPublicaciones = require('../db/publicaciones');
+const modeloPublicaciones = require('../db/publicaiones');
 
 class Publicaciones{
     constructor(data){

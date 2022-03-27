@@ -1,66 +1,102 @@
-const users = require('../db/user');
 const publicaciones = require('../db/publicaciones');
+const users = require('../db/user');
+const { Publicaciones } = require('./classPublicaciones');
+const {Op} = require('sequelize');
 
 class User{
-    constructor(data){
+    constructor(){
         this.modeloPublicacion = publicaciones;
         this.modeloUser = users;
-        this.nombre = data.nombre;
-        this.apellido = data.apellido;
-        this.edad = data.edad;
-        this.cedula = data.cedula;
-        this.email=data.email;
-        this.password = data.password;
+        this.nombre = null;
+        this.apellido = null;
+        this.email = null;
+        this.password = null;
+        this.cedula = null;
+        this.edad = null;
     }
 
     //guardar usuarios
-    async agregarUser(){
+    async agregarUser(data){
             let findUser = await this.modeloUser.findAll({
                 where : {
-                    NombreUser : this.nombre,
-                    PasswordUser : this.password
+                    Nombre : data.nombre,
+                    Password : data.password
                 },
-                attributes:['NombreUser', 'PasswordUser']
+                attributes:['Nombre', 'Password']
             })
         
             if(findUser[0] === undefined){
                 this.modeloUser.create({
-                    NombreUser : this.nombre,
-                    ApellidoUser: this.apellido,
-                    EmailUser:this.email,
-                    PasswordUser:this.password,
-                    CedulaUser:this.cedula,
-                    EdadUser: this.edad
+                    Nombre : data.nombre,
+                    Apellido: data.apellido,
+                    Email:data.email,
+                    Password:data.password,
+                    Cedula:data.cedula,
+                    Edad: data.edad
                 },{
-                    fields: ['NombreUser', 'ApellidoUser','EmailUser', 'PasswordUser', 'CedulaUser','EdadUser']
+                    fields: ['Nombre', 'Apellido','Email', 'Password', 'Cedula','Edad']
                 })
             }else{
-                res.json({
-                    mensaje : 'El usuario que desea agreagar ya existe',
-                    usuario: findUser
-                })
+            //los datos ya existen
             }
         }
 
     //CREAR PUBLICACION
     CrearPublicacion(data){
-        this.modeloPublicacion.create({
-            NombreCita : data.NombreCita,
-            ApellidoCita: data.ApellidoCita,
-            CedulaCita: data.CedulaCita,
-            EdadCita: data.EdadCita,
-            FechaCita : data.FechaCita, 
-            HoraCita : data.HoraCita
-        },{
-            fields:['NombreCita', 'ApellidoCita', 'CedulaCita', 'EdadCita', 'FechaCita', 'HoraCita']
-        })
+        let nuevaPublicacion = new Publicaciones(data);
+        nuevaPublicacion.AgreagarPublicacion();
     }
+
     //LISTA TODAS LAS PUBLICACIONES
     async VerPublicaciones(){
-        await this.modeloPublicacion.findAll({
-            attributes: ['NombreCita', 'ApellidoCita', 'CedulaCita', 'EdadCita', 'FechaCita', 'HoraCita']
+        let totalPublicaciones = await this.modeloPublicacion.findAll({
+            attributes: ['Nombre', 'Apellido', 'Cedula', 'Titulo']
         })
+        return totalPublicaciones;
     }
+
+    //ver una publicacion
+    async VerPublicacion(titulo){
+        let publicacion = await this.modeloPublicacion.findAll({
+            where:{
+                Titulo : titulo
+            }
+        })
+        if(publicacion){
+            publicacion.contador++;
+            return publicacion;
+        }else{
+            //la publicacion no existe
+        }
+    }
+    //ver las publicaciones destacadas
+    async PublicacionDestacada(){
+        let dosSemanas = new Date(new Date().setDate(new Date().getDate() - 14));
+        let publicacionesOrdenadas=[];
+        let elementMay = 0;
+        let publicacionesRecientes = await this.modeloPublicacion.findAll({
+            where: {
+                CreatedDate:{
+                    [Op.gt]: dosSemanas,
+                    [Op.lt]: new Date(),
+                }
+            },
+            attributes: ['Nombre', 'Apellido', 'Cedula', 'Titulo', 'Contador'] 
+        }); 
+        for(let i = 0; i<publicacionesRecientes.length;i++){
+            elementMay = 0;
+            publicacionesRecientes.forEach(element => {
+                if(element.Contador>elementMay){
+                    elementMay = element.Contador;
+                }
+            });
+            publicacionesOrdenadas[i] = elementMay; 
+        }
+        return publicacionesOrdenadas;
+    }
+
+
+
 
 }
 
