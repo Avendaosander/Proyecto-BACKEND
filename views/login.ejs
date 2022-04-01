@@ -11,21 +11,25 @@
    <style>
       body{
          width: 100%;
-         background: -webkit-linear-gradient(-135deg, #94ebcd, rgba(11, 1, 104, 0.8));
-         background: -o-linear-gradient(-135deg, #94ebcd, rgba(11, 1, 104, 0.8));
-         background: -moz-linear-gradient(-135deg, #94ebcd, rgba(11, 1, 104, 0.8));
-         background: linear-gradient(-135deg, #94ebcd, rgba(11, 1, 104, 0.8));
+         background: rgb(45,45,135);
+         background: linear-gradient(90deg, rgba(45,45,135,0.9920343137254902) 25%, rgba(148,235,205,1) 100%);
+      }
+      .diseñadores{
+         display: flex;
+         align-items: center;
+      }
+      .diseñadores p {
+         margin: 0 0.5rem;
       }
    </style>
 </head>
 
 <body>
   <h2 class="text-center mt-5"><%= title %></h2>
-   <div class="container">
+   <div class="container d-flex flex-row justify-content-center">
       <div class="row">
          <div class="col">
-            <h3 class="text-center">Usuario</h3>
-            <form target="/login" method="POST" class="card card-body">
+            <form target="/login" method="POST" class="card card-body m-3" style="width: 50rem">
                <div class="form-group p-2">
                   <label for="email">Email</label>
                   <input id="email" type="email" name="Email" class="form-control" placeholder="correo@correo.com" required/>
@@ -35,25 +39,11 @@
                   <input id="password" type="password" name="Password" class="form-control" placeholder="Password" required/>
                </div>
                <input id="rol" type="text" value="user" hidden name="rol" class="form-control" required/>
-               <input type="submit" value="Iniciar Sesion" class="btn btn-dark">
+               <input type="submit" value="Iniciar Sesion" class="btn btn-dark m-2">
             </form>
-            <a href="/register/user" class="btn bg-white bg-opacity-10 btn-outline-light m-3">Registrar como Usuario</a>
-         </div>
-         <div class="col ">
-            <h3 class="text-center">Administrador</h3>
-            <form target="/login" method="POST" class="card card-body">
-               <div class="form-group p-2">
-                  <label for="email">Email</label>
-                  <input id="email" type="email" name="Email" class="form-control" placeholder="correo@correo.com" required/>
-               </div>
-               <div class="form-group p-2">
-                  <label for="password">Password</label>
-                  <input id="password" type="password" name="Password" class="form-control" placeholder="Password" required/>
-               </div>
-               <input id="rol" type="text" value="admin" hidden name="rol" class="form-control" required/>
-               <input type="submit" value="Iniciar Sesion" class="btn btn-dark">
-            </form>
-            <a href="/register/admin" class="btn bg-white bg-opacity-10 btn-outline-light m-3">Registrar como Administrador</a>
+            <div class="text-center">
+               <a href="/register/user" class="btn bg-white bg-opacity-10 btn-outline-light mt-3">Registrar como Usuario</a>
+            </div>
          </div>
       </div>
    </div>

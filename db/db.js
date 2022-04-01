@@ -25,7 +25,7 @@ const sequelize = new Sequelize(config.DB, config.USER, config.PASSWORD,{
    storage: './proyect.sql'
 })
 
-sequelize.sync({force: process.env.DB_FORCE === "false"}) /* Se debe corregir */
+sequelize.sync({force: process.env.DB_FORCE === "true"}) /* Se debe corregir */
 
 module.exports = {
    database: sequelize,

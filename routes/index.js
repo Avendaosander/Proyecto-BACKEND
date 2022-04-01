@@ -1,18 +1,33 @@
-const express = require('express');
+ const express = require('express');
 const router = express.Router();
 const bcrypt = require("bcryptjs"); /* Para encriptar contraseñas */
 const { validarUser, validarCampos, validarUpdate, validarUserUpdate } = require('../validators/validator') /* Validaciones */
 const { tablesUsers, tablesPosts, tablesAdmins } = require('../db/db');
+const multer = require('multer')
+const path = require('path');
+
+
+const diskstorage = multer.diskStorage({
+  destination: path.join(__dirname, '../imagenes'),
+  filename: (req, file, cb) => {
+    cd(null, file.originalname)
+  }
+})
+
+const fileUpload = multer({
+  storage: diskstorage
+})
 
 /* GET Home page. */
 router.get('/:rol', (req, res) => {
   if (req.params.rol === 'admin' || req.params.rol === 'user') {
     tablesPosts.publicaciones.findAll({
-      attributes: [ 'Nombre','Apellido','Cedula','Titulo','Contenido', 'Contador', 'CreatedDate' ],
+      attributes: [ 'Nombre','Apellido','Cedula','Titulo','Media','Contenido', 'Contador', 'CreatedDate' ],
       order: [
-        ['Titulo', 'ASC']
+        ['Contador', 'ASC']
       ],
-      raw: true
+      raw: true,
+      limit: 3
     }).then((publicacionData)=>{
       // console.log(publicacionData)
       res.status(200).render('index', { publicaciones: publicacionData, error: '', rol: req.params.rol });
@@ -23,8 +38,7 @@ router.get('/:rol', (req, res) => {
     res.render('error', { error: 'Rol invalido'})
   }
 });
-/* GET Login page. */
-router.get('/iniciar/login', (req, res) => {
+/* GET Login page. */router.get('/iniciar/login', (req, res) => {
   res.render('login', { title: 'Iniciar Sesion' });
 });
 router.post('/iniciar/login', (req, res) => {
@@ -78,6 +92,49 @@ router.post('/iniciar/login', (req, res) => {
     }).catch((err)=>{
       res.status(500).render('error', { user:'', users: [], error: err });
     })
+  } else {
+    res.render('error', { error: 'Rol invalido'})
+  }
+});
+/* GET Register page. */
+router.get('/crear-admin/:rol', (req, res) => {
+  res.render('register-admin', { title: 'Crear Administrador', rol: req.params.rol });
+});
+router.post('/crear-admin/:rol', validarUser, (req, res) => {
+  const { nombre, apellido, edad, cedula, email, password } = req.body
+  if (req.params.rol === 'admin') {
+    const { telefono } = req.body
+    let UserAdminClass = { nombre, apellido, edad, cedula, email, password, telefono}
+    let passwordHash = bcrypt.hashSync(UserAdminClass.password, 10);
+    tablesAdmins.admins.findOrCreate({
+      where: {
+        Email:UserAdminClass.email, Cedula:UserAdminClass.cedula
+      },
+      defaults: {
+        Nombre:UserAdminClass.nombre, Apellido:UserAdminClass.apellido, Email:UserAdminClass.email, Password:passwordHash, Cedula:UserAdminClass.cedula, Edad:UserAdminClass.edad, Telefono:UserAdminClass.telefono
+      }
+    }).then(([user, created])=>{
+      if (created) {
+        tablesPosts.publicaciones.findAll({
+          attributes: [ 'Nombre','Apellido','Cedula','Titulo','Contenido', 'Contador', 'CreatedDate' ],
+          order: [
+            ['Titulo', 'ASC']
+          ],
+          raw: true
+        }).then((publicacionData)=>{
+          // console.log(publicacionData)
+          res.status(200).render('index', { publicaciones: publicacionData, error: '', rol: req.params.rol });
+        }).catch((err)=>{
+          res.render('error', { publicaciones: [], error: err });
+        })
+      } else {
+        res.status(400).render('register-admin', { title: 'Crear Administrador', error: 'El Administrador de cedula: '+user.dataValues.Cedula+' ya está registrado en el sistema' });
+      }
+    }).catch((err)=>{
+      res.status(500).render('error', { user:'', users: [], error: err });
+    })
+  } else if (req.params.rol === 'user') {
+    res.render('error', { error: 'Eres un usuario, no puedes crear un administrador'})
   } else {
     res.render('error', { error: 'Rol invalido'})
   }
@@ -153,6 +210,28 @@ router.post('/register/:rol', validarUser, (req, res) => {
     res.render('error', { error: 'Rol invalido'})
   }
 });
+/* GET Perfil page. */
+router.get('/perfil/:cedula/:rol', (req, res) => {
+  if (req.params.rol === 'admin') {
+    tablesAdmins.admins.findAll({
+      where: { Cedula: req.params.cedula }
+    }).then(([userData])=>{
+      res.status(200).render('perfil', { title: 'Perfil', users: userData, error: '', rol: req.params.rol});
+    }).catch((err)=>{
+      res.render('error', { user: [], error: err });
+    })
+  } else if (req.params.rol === 'user') {
+    tablesUsers.users.findAll({
+      where: { Cedula: req.params.cedula }
+    }).then(([userData])=>{
+      res.status(200).render('perfil', { title: 'Perfil', users: userData.dataValues, error: '', rol: req.params.rol});
+    }).catch((err)=>{
+      res.render('error', { user: [], error: err });
+    })
+  } else {
+    res.render('error', { error: 'Rol invalido'})
+  }
+});
 /* GET Users page. */
 router.get('/users/:rol', (req, res) => {
   if (req.params.rol === 'admin' || req.params.rol === 'user') {
@@ -176,7 +255,7 @@ router.get('/users/:rol', (req, res) => {
 router.get('/publicaciones/:rol', (req, res) => {
   if (req.params.rol === 'admin' || req.params.rol === 'user') {
     tablesPosts.publicaciones.findAll({
-      attributes: [ 'Nombre','Apellido','Cedula','Titulo','Contenido', 'Contador', 'CreatedDate' ],
+      attributes: [ 'Nombre','Apellido','Cedula','Titulo','Media','Contenido', 'Contador', 'CreatedDate' ],
       order: [
         ['Titulo', 'ASC']
       ],
@@ -202,21 +281,21 @@ router.get('/crear-publicacion/:rol', (req, res) => {
   }
 });
 router.post('/crear-publicacion/:rol', validarCampos, (req, res) => {
-  const { nombre, apellido, cedula, titulo, contenido } = req.body
-  const CitaClass = { nombre, apellido, cedula, titulo, contenido }
+  const { nombre, apellido, cedula, titulo, media, contenido } = req.body
+  const CitaClass = { nombre, apellido, cedula, titulo, media, contenido }
   if (req.params.rol === 'admin' || req.params.rol === 'user') {
     tablesPosts.publicaciones.findOrCreate({
       where: {
         Cedula:CitaClass.cedula
       },
       defaults: {
-        Nombre:CitaClass.nombre, Apellido:CitaClass.apellido, Cedula:CitaClass.cedula, Titulo:CitaClass.titulo, Contenido:CitaClass.contenido, Contador:0
+        Nombre:CitaClass.nombre, Apellido:CitaClass.apellido, Cedula:CitaClass.cedula, Titulo:CitaClass.titulo, Media:CitaClass.media, Contenido:CitaClass.contenido, Contador:0
       }
     }).then(([publicacion, created])=>{
       // console.log(created)
       if (created) {
         tablesPosts.publicaciones.findAll({
-          attributes: [ 'Nombre','Apellido','Cedula','Titulo','Contenido', 'Contador', 'CreatedDate'],
+          attributes: [ 'Nombre','Apellido','Cedula','Titulo','Media','Contenido', 'Contador', 'CreatedDate'],
           order: [
             ['Titulo', 'DESC']
           ],
@@ -228,11 +307,26 @@ router.post('/crear-publicacion/:rol', validarCampos, (req, res) => {
           res.status(500).render('error', { publicacion:'', publicaciones: [], error: err });
         })
       } else {
-        console.log(publicacion)
+        // console.log(publicacion)
         res.status(400).render('new-publication', { title: 'Crear una nueva publicacion', error: 'El usuario de cedula: '+publicacion.dataValues.Cedula+' ya tiene una publicacion' });
       }
     }).catch((err)=>{
       res.status(500).render('error', { publicacion:'', publicaciones: [], error: err });
+    })
+  } else {
+    res.render('error', { error: 'Rol invalido'})
+  }
+});
+/* GET Ver Publication page. */
+router.get('/ver-publicacion/:cedula/:rol', (req, res) => {
+  if (req.params.rol === 'admin' || req.params.rol === 'user') {
+    tablesPosts.publicaciones.findAll({
+      where: { Cedula: req.params.cedula }
+    }).then(([publicacionesData])=>{
+      
+      res.status(200).render('publication', { title: publicacionesData.dataValues.Titulo, publicacion: publicacionesData.dataValues, error: '', rol: req.params.rol});
+    }).catch((err)=>{
+      res.render('error', { citas: [], error: err });
     })
   } else {
     res.render('error', { error: 'Rol invalido'})
@@ -262,7 +356,8 @@ router.post('/editar-publicacion/:cedula/:rol', validarUpdate, async (req, res, 
       order: [
         ['Titulo', 'ASC']
       ],
-      raw: true
+      raw: true,
+      limit: 3
     }).then((publicacionData)=>{
       // console.log(publicacionData)
       res.status(200).render('index', { publicaciones: publicacionData, error: '', rol: req.params.rol });
@@ -276,15 +371,21 @@ router.post('/editar-publicacion/:cedula/:rol', validarUpdate, async (req, res, 
 /* GET Update User page. */
 router.get('/editar-usuario/:cedula/:rol', (req, res) => {
   if (req.params.rol === 'admin') {
+    tablesAdmins.admins.findAll({
+      where: { Cedula: req.params.cedula }
+    }).then(([userData])=>{
+      res.status(200).render('update-user', { title: 'Editar Usuario', users: userData, error: '', rol: req.params.rol});
+    }).catch((err)=>{
+      res.render('error', { user: [], error: err });
+    })
+  } else if (req.params.rol === 'user') {
     tablesUsers.users.findAll({
       where: { Cedula: req.params.cedula }
     }).then(([userData])=>{
-      res.status(200).render('update-user', { title: 'Editar Usuario', users: userData.dataValues, error: '', rol: req.params.rol});
+      res.status(200).render('update-user', { title: 'Editar Usuario', users: userData, error: '', rol: req.params.rol});
     }).catch((err)=>{
       res.render('error', { users: [], error: err });
     })
-  } else if (req.params.rol === 'user') {
-    res.render('error', { error: 'Eres un usuario, no puedes Editar otro usuario'})
   } else {
     res.render('error', { error: 'Rol invalido'})
   }
@@ -302,7 +403,7 @@ router.post('/editar-usuario/:cedula/:rol', validarUserUpdate, async (req, res, 
       raw: true
     }).then((useData)=>{
       // console.log(useData)
-      res.status(200).render('users', { title: 'Usuarios', users: useData, error: '', rol: req.params.rol});
+      res.status(200).render('users', { title: 'Usuarios', users: useData.dataValues, error: '', rol: req.params.rol});
     }).catch((err)=>{
       res.render('error', { users: [], error: err });
     })
@@ -347,7 +448,8 @@ router.get('/borrar-publicacion/:cedula/:rol', async (req, res, next) => {
       order: [
         ['Titulo', 'ASC']
       ],
-      raw: true
+      raw: true,
+      limit: 3
     }).then((publicacionData)=>{
       // console.log(publicacionData)
       res.status(200).render('index', { publicaciones: publicacionData, error: '', rol: req.params.rol });

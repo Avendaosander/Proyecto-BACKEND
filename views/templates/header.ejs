@@ -11,19 +11,29 @@
    <style>
       body{
          width: 100%;
-         background: -webkit-linear-gradient(-135deg, #94ebcd, rgba(11, 1, 104, 0.8));
-         background: -o-linear-gradient(-135deg, #94ebcd, rgba(11, 1, 104, 0.8));
-         background: -moz-linear-gradient(-135deg, #94ebcd, rgba(11, 1, 104, 0.8));
-         background: linear-gradient(-135deg, #94ebcd, rgba(11, 1, 104, 0.8));
+         background: rgb(45,45,135);
+         background: linear-gradient(90deg, rgba(45,45,135,0.9920343137254902) 25%, rgba(148,235,205,1) 100%);
       }
+      .diseñadores{
+         display: flex;
+         align-items: center;
+      }
+      .diseñadores p {
+         margin: 0 0.5rem;
+      }
+      .bg-azul{ background-color: #A4DDED}
+      .content li:nth-child(odd) { 
+         background-color: #8FBDD3; 
+      }
+      .content li{list-style: none; padding: 1rem;}
    </style>
 </head>
 
 <body>
    <div class="container p-4 text-center">
-      <nav class="navbar fixed-top navbar-expand-lg navbar-dark p-md-3 bg-dark bg-gradient">
+      <nav class="navbar fixed-top navbar-expand-lg navbar-dark p-md-3 " style="background: linear-gradient(90deg, rgba(0,45,98,1) 0%, rgba(0,71,146,1) 100%)">
          <div class="container">
-            <a class="navbar-brand text-white" href="/<%= rol %>">ASAL</a>
+            <a class="navbar-brand text-white" href="/<%= rol %>"><i class="fa-solid fa-house me-2"></i>ASAL</a>
             <button
                class="navbar-toggler"
                type="button"
@@ -47,7 +57,10 @@
                         <a class="nav-link text-white" href="/publicaciones/<%= rol %>">Ver Publicaciones</a>
                      </li>
                      <li class="nav-item">
-                        <a class="nav-link text-white" href="#">Cerrar Sesión</a>
+                        <a class="nav-link text-white" href="/perfil/29694896/<%= rol %>">Perfil</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link text-white" href="#"><i class="fa-solid fa-power-off"></i></a>
                      </li>
                   <% } %> 
                   <% if (rol == 'admin') { %> 
@@ -58,10 +71,16 @@
                         <a class="nav-link text-white" href="/publicaciones/<%= rol %>">Ver Publicaciones</a>
                      </li>
                      <li class="nav-item">
+                        <a class="nav-link text-white" href="/crear-admin/<%= rol %>">Crear Administrador</a>
+                     </li>
+                     <li class="nav-item">
                         <a class="nav-link text-white" href="/users/<%= rol %>">Ver Usuarios</a>
                      </li>
                      <li class="nav-item">
-                        <a class="nav-link text-white" href="#">Cerrar Sesión</a>
+                        <a class="nav-link text-white" href="/perfil/29694896/<%= rol %>">Perfil</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link text-white" href="#"><i class="fa-solid fa-power-off"></i></a>
                      </li>
                   <% } %>
                </ul>

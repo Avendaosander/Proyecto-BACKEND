@@ -1,30 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-   <meta charset="UTF-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title> Register </title>
+<%- include("templates/header", {tituloWeb: 'Perfil'}) %>
 
-   <!-- CSS only -->
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-   <style>
-      body{
-         width: 100%;
-         background: rgb(45,45,135);
-         background: linear-gradient(90deg, rgba(45,45,135,0.9920343137254902) 25%, rgba(148,235,205,1) 100%);
-      }
-      .diseñadores{
-         display: flex;
-         align-items: center;
-      }
-      .diseñadores p {
-         margin: 0 0.5rem;
-      }
-   </style>
-</head>
-
-<body>
    <h2 class="text-center mt-5"><%= title %></h2>
    <div class="container d-flex flex-row justify-content-around mt-4">
       <form target="/register/<%= rol %>" method="POST" class="card p-3" style="width: 50rem">

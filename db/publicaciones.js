@@ -28,6 +28,10 @@ module.exports = (connection) => {
          type: DataTypes.STRING(255),
          allowNull: false
       },
+      Media: {
+         type: DataTypes.BLOB('medium'),
+         allowNull: false
+      },
       Contador: {
          type: DataTypes.INTEGER(11),
          allowNull: false

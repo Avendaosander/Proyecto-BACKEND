@@ -1,0 +1,32 @@
+<%- include("templates/header", {tituloWeb: 'Usuario' }) %>
+   <h2 class="text-center mt-5"><%= title %> </h2>
+   <div class="container p-2 d-flex flex-row justify-content-center">
+      <div class="row" style="width: 50rem">
+         <% if (typeof user !== 'undefined') { %>
+            <div class="bg-azul" style="padding: 0;">
+               <ul class="content mb-0" style="padding: 0;">
+                  <li class="col">Nombre: <%= user.Nombre %> <%= user.Apellido %></li>
+                  <li class="col">Cedula: <%= user.Cedula %></li>
+                  <li class="col">Edad: <%= user.Edad %></li>
+                  <li class="col">Email: <%= user.Email %></li>
+                  <li class="col">Password: <%= user.Password %></li>
+                  <% if(rol == 'admin') %>
+                     <li class="col">Telefono: <%= user.Telefono %></li>
+                  <% } %> 
+               </ul>
+            </div>
+            <% if (rol == 'admin') { %>
+               <div class="card-footer">
+                  <div class="nav justify-content-around">
+                     <a href="/editar-user/<%= user.Cedula %>/<%= rol %>" class="btn btn-warning"> Editar </a>
+                     <a href="/borrar-user/<%= user.Cedula %>/<%= rol %>" class="btn btn-danger"> Borrar </a>
+                  </div>
+               </div>
+            <% } %>
+         <% } else { %>
+            <div class="container">No hay user para ver</div>
+         <% } %>
+      </div>
+   </div>
+</body>
+<%- include("templates/footer") %>

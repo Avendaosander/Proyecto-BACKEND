@@ -1,0 +1,31 @@
+<%- include("templates/header", {tituloWeb: publicacion.Titulo }) %>
+   <script>
+      fetch('https://api.ipify.org/?format=json').then(results => results.json()).then(data => console.log(data.ip))
+   </script>
+   <h2 class="text-center mt-5"><%= title %> </h2>
+   <div class="container p-2 d-flex flex-row justify-content-center">
+      <div class="row" style="width: 50rem">
+         <% if (typeof publicacion !== 'undefined') { %>
+            <div class="bg-azul" style="padding: 0;">
+               <ul class="content mb-0" style="padding: 0;">
+                  <li class="col"><%= publicacion.Contenido %></li>
+                  <li class="col">Fecha Creado: <%= publicacion.CreatedDate %></li>
+                  <li class="col">Autor: <%= publicacion.Nombre %> <%= publicacion.Apellido %> / C.I: <%= publicacion.Cedula %></li>
+                  <li class="col text-end"><i class="fa-solid fa-eye"></i> <%= publicacion.Contador %></li>
+               </ul>
+            </div>
+            <% if (rol == 'admin') { %>
+               <div class="card-footer">
+                  <div class="nav justify-content-around">
+                     <a href="/editar-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-warning"> Editar </a>
+                     <a href="/borrar-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-danger"> Borrar </a>
+                  </div>
+               </div>
+            <% } %>
+         <% } else { %>
+            <div class="container">No hay publicacion para ver</div>
+         <% } %>
+      </div>
+   </div>
+</body>
+<%- include("templates/footer") %>

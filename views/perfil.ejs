@@ -1,0 +1,29 @@
+<%- include("templates/header", {tituloWeb: 'Perfil'}) %>
+   <h2 class="text-center mt-5"><%= title %></h2>
+   <div class="container d-flex flex-row justify-content-center p-2">
+      <div class="row " style="width: 50rem">
+         <% if (typeof users !== 'undefined') { %>
+            <div class=" card-body bg-azul" style="padding: 0;">
+               <h4 class="text-center mt-3">Usuario: <%= users.ID %></h4>
+               <ul class="content mt-3" style="padding: 0;">
+                  <li class="col">Nombre: <%= users.Nombre %> <%= users.Apellido %></li>
+                  <li class="col">Cedula: <%= users.Cedula %></li>
+                  <li class="col">Edad: <%= users.Edad %></li>
+                  <li class="col">Email: <%= users.Email %></li>
+                  <% if ( rol === 'admin') { %>
+                     <li class="col">Telefono: <%= users.Telefono %></li>
+                  <% } %> 
+                  <li class="col">Fecha Creado: <%= users.CreatedDate %></li>
+               </ul>
+            </div>
+            <div class="nav justify-content-around mt-4">
+               <a href="/editar-usuario/<%= users.Cedula %>/admin" class="btn btn-warning"> Editar </a>
+               <a href="/borrar-usuario/<%= users.Cedula %>/admin" class="btn btn-danger"> Desactivar </a>
+            </div>
+         <% } else { %>
+            <div class="container">No hay usuarios para ver</div>
+         <% } %>
+      </div>
+   </div>
+</body>
+<%- include("templates/footer") %>

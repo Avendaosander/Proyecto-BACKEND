@@ -1,12 +1,14 @@
 <%- include("templates/header", {tituloWeb: 'Publicaciones'}) %>
    <h2 class="text-center mt-5"><%= title %></h2>
    <div class="container p-2">
-      <div class="row">
+      <div class="row d-flex flex-row justify-content-center">
          <% if (typeof publicaciones !== 'undefined') { %>
             <% if (publicaciones.length > 0) { %>
                <% publicaciones.forEach( publicacion => { %>
+                  <% console.log(publicacion.Media) %> 
                   <div class="col-md-4 p-2">
                      <div class="card">
+                        <img src=<%= publicacion.Media %> class="card-img-top" alt="Media">
                         <div class="card-header">Titulo: <%= publicacion.Titulo %></div>
                         <div class="card-body">
                            <div class="col m-1"><%= publicacion.Contenido %></div>
@@ -16,7 +18,7 @@
                         <% if (rol == 'admin') { %>
                            <div class="card-footer">
                               <div class="nav justify-content-around">
-                                 <a href="#" class="btn btn-primary"> Ver </a>
+                                 <a href="/ver-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-primary"> Ver </a>
                                  <a href="/editar-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-warning"> Editar </a>
                                  <a href="/borrar-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-danger"> Borrar </a>
                               </div>
@@ -33,5 +35,14 @@
          <% } %>
       </div>
    </div>
+   <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-center">
+        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+      </ul>
+    </nav>
 </body>
 <%- include("templates/footer") %>
