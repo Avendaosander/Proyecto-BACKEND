@@ -1,39 +1,25 @@
-const admin = require('../db/admin');
-const modeloAdm = require('../db/admin');
+const {tablesAdmins} = require('../db/db');
 const {User} = require('./classUser');
 
 class Admin extends User{
     constructor(){
         super();
-        this.modeloAdm=modeloAdm;
+        this.modeloAdm=tablesAdmins.admins;
         this.telefono = null;
     }
 
     async agregarAdmin(data){
-        let findAdm = await this.modeloAdm.findAll({
-            where : {
-                Nombre : data.nombre,
-                Password : data.password
+        let [admin, created] = await this.modeloAdm.findOrCreate({
+            where: {
+              Email:data.email, Cedula:data.cedula
             },
-            attributes:['Nombre', 'Password']
-        })
-    
-        if(findAdm[0] === undefined){
-            this.modeloAdm.create({
-                Nombre: data.nombre,
-                Apellido: data.apellido,
-                Email:data.email,
-                Password:data.password,
-                Cedula:data.cedula,
-                Edad: data.edad,
-                Telefono:data.telefono
-            },{
-                fields: ['Nombre', 'Apellido','Email', 'Password', 'Cedula','Edad','Telefono']
-            })
-        }else{
-            return false;
-        }
+            defaults: {
+              Nombre:data.nombre, Apellido:data.apellido, Email:data.email, Password:data.passwordHash, Cedula:data.cedula, Edad:data.edad, Telefono: data.telefono
+            }
+        });
+        return [admin, created];
     }
+    
 
     //BUSCAR ADMIN
     async buscarAdm(correo){
@@ -42,13 +28,15 @@ class Admin extends User{
                 Email : correo
             }
         })
-        if(adm){
-            return admin;
-        }else{
-            return false;
-        }
+        return adm;
     }
-
+    buscarAdminEdit(cedula){
+        let adminis = this.modeloAdm.findAll({
+            where: {Cedula:cedula}
+        })
+        return adminis;
+        
+    }
     //buscar user
     async buscarUser(correo){
         let usuario = await this.modeloUser.findAll({
@@ -56,67 +44,32 @@ class Admin extends User{
                 Email : correo
             }
         })
-        if(usuario){
-            return usuario;
-        }
-        else{
-            return false;
-        }
+        return usuario;
     }
     //ver usuarios 
     async ListarUser(){
-        let usuarios = await this.modeloUser.findAll({
-            attributes : ['Nombre', 'Apellido','Email', 'Password', 'Cedula','Edad']
+        let users = await this.modeloUser.findAll({
+            attributes: [ 'ID', 'Nombre','Apellido','Cedula','Edad','Email','Password' ],
+            order: [
+                ['ID', 'ASC']
+            ],
+            raw: true
         })
-        return usuarios;
+        return users;
     }
     //EDITAR DATOS 
-    async editarPublicacion(titulo, dataNew){
-        let busquedaPublicacion = await this.modeloPublicacion.findAll({
-            where: {
-                Titulo: titulo
-            }
-        });
-        if(busquedaPublicacion[0] === undefined){
-            return false;
-        }
-        const dataUpdate = await this.modeloPublicacion.update({
-            Nombre : dataNew.nombre,
-            Apellido: dataNew.apellido,
-            Cedula: dataNew.cedula,
-            Titulo: dataNew.titulo,
-            Contenido: dataNew.contenido
-        },{
-            where :{
-                Titulo : titulo
-            }
-        });
-    
-        if(dataUpdate){
-            return dataUpdate;
-        }else{
-            return false;
-        }
+    async updatePublicacion(cedula, data){
+        let actualizacion = this.modeloPublicacion.editarPublicacion(cedula, data);
+        return actualizacion;
     }
 
     //editar Usuario
 
-    async editarUser(correo,data){
-        let usuarioUP = await this.modeloUser.findAll({
+    async editarUser(cedula,data){
+        let usuarioUpdate = this.modeloUser.update(data, {
             where:{
-                Email:correo
+                Cedula : cedula
             }
-        })
-        if(!usuarioUP){
-            return false;
-        }
-        let usuarioUpdate = this.modeloUser.update({
-            Nombre : data.nombre,
-            Apellido: data.apellido,
-            Email:data.email,
-            Password:data.password,
-            Cedula:data.cedula,
-            Edad: data.edad
         })
         if(usuarioUpdate){
             return usuarioUpdate;
@@ -125,32 +78,35 @@ class Admin extends User{
         }
     }
 
+    buscarPublicacionEdit(cedula){
+        let publicacionEditar =this.modeloPublicacion.buscarParaEditar(cedula);
+        return publicacionEditar;
+    }
+
     //eliminar
-    async eliminarPublicacion(titulo){
-        let DataDeleted = await this.modeloPublicacion.destroy({
-            where: {
-                Titulo : titulo
-            }
-        });
-        if(DataDeleted > 0){
-            //se elimino
-        }else{
-            //no se elimino
-        }
+    async deletePublicacion(cedula){
+        this.modeloPublicacion.eliminarPublicacion(cedula);
     }
     //eliminar User
-    async deleteUser(correo){
-        let userDeleted = await this.modeloUser.destroy({
+    async deleteUser(cedula){
+        await this.modeloUser.destroy({
             where:{
-                Email : correo
+                Cedula : cedula
             }
-        })
-        if(userDeleted){
-            return true;
-        }else{
-            return false;
-        }
+        });
     }
+
+    async CambioPassAdm(cedula, newPass){
+        let newClave = await this.modeloAdm.update({
+            Password : newPass
+        },{
+            where: {
+                Cedula: cedula
+            }
+        }); 
+        return newClave;
+    }
+
 }
 
 module.exports.Admin=Admin;

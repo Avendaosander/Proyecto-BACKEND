@@ -1,12 +1,12 @@
-const publicaciones = require('../db/publicaciones');
-const users = require('../db/user');
+const {tablesUsers, database} = require('../db/db');
 const { Publicaciones } = require('./classPublicaciones');
 const {Op} = require('sequelize');
+let nuevaPublicacion = new Publicaciones();
 
 class User{
     constructor(){
-        this.modeloPublicacion = publicaciones;
-        this.modeloUser = users;
+        this.modeloPublicacion = nuevaPublicacion;
+        this.modeloUser = tablesUsers.users;
         this.nombre = null;
         this.apellido = null;
         this.email = null;
@@ -17,56 +17,34 @@ class User{
 
     //guardar usuarios
     async agregarUser(data){
-            let findUser = await this.modeloUser.findAll({
-                where : {
-                    Nombre : data.nombre,
-                    Password : data.password
-                },
-                attributes:['Nombre', 'Password']
-            })
-        
-            if(findUser[0] === undefined){
-                this.modeloUser.create({
-                    Nombre : data.nombre,
-                    Apellido: data.apellido,
-                    Email:data.email,
-                    Password:data.password,
-                    Cedula:data.cedula,
-                    Edad: data.edad
-                },{
-                    fields: ['Nombre', 'Apellido','Email', 'Password', 'Cedula','Edad']
-                })
-            }else{
-            //los datos ya existen
+        let [user, created] = await this.modeloUser.findOrCreate({
+            where: {
+              Email:data.email, Cedula:data.cedula
+            },
+            defaults: {
+              Nombre:data.nombre, Apellido:data.apellido, Email:data.email, Password:data.passwordHash, Cedula:data.cedula, Edad:data.edad
             }
-        }
-
+        });
+        return [user, created];
+    }
     //CREAR PUBLICACION
     CrearPublicacion(data){
-        let nuevaPublicacion = new Publicaciones(data);
-        nuevaPublicacion.AgreagarPublicacion();
+        let nuevo = this.modeloPublicacion.AgreagarPublicacion(data);
+        return nuevo;
     }
 
     //LISTA TODAS LAS PUBLICACIONES
-    async VerPublicaciones(){
-        let totalPublicaciones = await this.modeloPublicacion.findAll({
-            attributes: ['Nombre', 'Apellido', 'Cedula', 'Titulo']
-        })
-        return totalPublicaciones;
+    VerPublicaciones(){
+        let publicacionesTotal= this.modeloPublicacion.verPublicaciones();
+        return publicacionesTotal;
     }
-
     //ver una publicacion
-    async VerPublicacion(titulo){
-        let publicacion = await this.modeloPublicacion.findAll({
-            where:{
-                Titulo : titulo
-            }
-        })
-        if(publicacion){
-            publicacion.contador++;
-            return publicacion;
+    async VerPublicacion(cedula){
+        let publicacion =this.modeloPublicacion.buscarPublicacion(cedula);
+        if(publicacion.error){
+            return publicacion.error;
         }else{
-            //la publicacion no existe
+            return publicacion;
         }
     }
     //ver las publicaciones destacadas
@@ -95,8 +73,31 @@ class User{
         return publicacionesOrdenadas;
     }
 
+    //CambiarClave
+    async CambioPass(cedula, newPass){
+        let newClave = await this.modeloUser.update({
+            Password : newPass
+        },{
+            where: {
+                Cedula: cedula
+            }
+        }); 
+        return newClave;
+    }
 
+    buscarUserToEdit(cedula){
+        let userEdit = this.modeloUser.findAll({
+            where:{
+                Cedula : cedula
+            }
+        });
+         return userEdit;
+    }
 
+    //mejores publicaciones
+    destacados(){
+        return this.modeloPublicacion.PublicacionDestacada();
+    }
 
 }
 
