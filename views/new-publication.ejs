@@ -1,33 +1,35 @@
 <%- include("templates/header", {tituloWeb: 'Crear Publicacion'}) %>
   <h2 class="text-center mt-5"><%= title %></h2>
-   <div class="container">
-      <form target="/crear-publicacion/<%= rol %>" method="POST" class="card card-body mt-4">
-         <div class="form-group p-2">
-            <label for="nombre">Nombre</label>
-            <input id="nombre" type="text" name="nombre" class="form-control" placeholder="Tú Nombre" required/>
-         </div>
-         <div class="form-group p-2">
-            <label for="apellido">Apellido</label>
-            <input id="apellido" type="text" name="apellido" class="form-control" placeholder="Tú Apellido" required/>
-         </div>
-         <div class="form-group p-2">
-            <label for="cedula">Cedula</label>
-            <input id="cedula" type="number" name="cedula" class="form-control" placeholder="Tú Cedula" required/>
-         </div>
-         <div class="form-group p-2">
-            <label for="titulo">Titulo</label>
-            <input id="titulo" type="text" name="titulo" class="form-control" placeholder="Titulo" required/>
-         </div>
-         <div class="form-group p-2">
-            <label for="media">Media</label>
-            <input id="media" type="file" accept="image/*, video/*" multiple name="media" class="form-control" placeholder="Contenido" required/>
-         </div>
-         <div class="form-group p-2">
-            <label for="contenido">Contenido</label>
-            <input id="contenido" type="text" name="contenido" class="form-control" placeholder="Contenido" required/>
-         </div>
-         <input type="submit" value="Guardar Publicacion" class="btn btn-primary m-2">
-      </form>
+   <div class="container d-flex flex-row justify-content-center">
+      <div class="row">
+         <form target="/crear-publicacion/<%= rol %>" method="POST" enctype="multipart/form-data" class="card card-body mt-4" style="width: 50rem">
+            <div class="form-group p-2">
+               <label for="nombre">Nombre</label>
+               <input id="nombre" type="text" name="nombre" class="form-control" placeholder="Tú Nombre" required/>
+            </div>
+            <div class="form-group p-2">
+               <label for="apellido">Apellido</label>
+               <input id="apellido" type="text" name="apellido" class="form-control" placeholder="Tú Apellido" required/>
+            </div>
+            <div class="form-group p-2">
+               <label for="cedula">Cedula</label>
+               <input id="cedula" type="number" name="cedula" class="form-control" placeholder="Tú Cedula" required/>
+            </div>
+            <div class="form-group p-2">
+               <label for="titulo">Titulo</label>
+               <input id="titulo" type="text" name="titulo" class="form-control" placeholder="Titulo" required/>
+            </div>
+            <div class="form-group p-2">
+               <label for="media">Media</label>
+               <input id="media" type="file" accept="image/*, video/*" multiple name="media" class="form-control" placeholder="Contenido" required/>
+            </div>
+            <div class="form-group p-2">
+               <label for="contenido">Contenido</label>
+               <input id="contenido" type="text" name="contenido" class="form-control" placeholder="Contenido" required/>
+            </div>
+            <input type="submit" value="Guardar Publicacion" class="btn btn-primary m-2">
+         </form>
+      </div>
       <% if (typeof error !== 'undefined') { %> 
          <h3 class="text-center p-4"><%= error %> </h3>
       <% } %> 

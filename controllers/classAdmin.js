@@ -22,17 +22,17 @@ class Admin extends User{
     
 
     //BUSCAR ADMIN
-    async buscarAdm(correo){
+    async buscarAdm(cedula){
         let adm = await this.modeloAdm.findAll({
             where:{
-                Email : correo
+                Cedula : cedula
             }
         })
         return adm;
     }
-    buscarAdminEdit(cedula){
+    buscarAdminEdit(email){
         let adminis = this.modeloAdm.findAll({
-            where: {Cedula:cedula}
+            where: {Email:email}
         })
         return adminis;
         
@@ -45,6 +45,16 @@ class Admin extends User{
             }
         })
         return usuario;
+    }
+    //ver una publicacion
+    async VerPublicacion(cedula){
+        console.log('entra aqui admin')
+        let publicacion =this.modeloPublicacion.buscarPublicacion(cedula);
+        if(publicacion.error){
+            return publicacion.error;
+        }else{
+            return publicacion;
+        }
     }
     //ver usuarios 
     async ListarUser(){

@@ -27,6 +27,8 @@ const validarCampos = [
    body('titulo', "Ingrese el titulo")
       .exists()
       .isLength({min: 8}),
+   body('media', "Ingrese una imagen o video de su publicacion")
+      .exists(),
    body('contenido', "Ingrese el contenido de su publicacion")
       .exists(),
    (req,res,next) => {

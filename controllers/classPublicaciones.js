@@ -6,6 +6,7 @@ class Publicaciones{
         this.Nombre = null;
         this.Apellido= null;
         this.Cedula= null;
+        this.media;
         this.titulo = null;
         this.Contenido= null;
         this.Contador = 0;
@@ -17,18 +18,19 @@ class Publicaciones{
             Apellido: data.apellido,
             Cedula: data.cedula,
             Titulo: data.titulo,
+            Media: data.media,
             Contenido: data.contenido,
             Contador : 0, 
         },{
-            fields:['Nombre', 'Apellido', 'Cedula', 'Titulo','Contenido', 'Contador']
+            fields:['Nombre', 'Apellido', 'Cedula', 'Titulo','Media','Contenido', 'Contador']
         })
         return nuevo;
     }
     async verPublicaciones(){
         let totalPublicaciones = await this.modelo.findAll({
-            attributes: [ 'Nombre','Apellido','Cedula','Titulo','Contenido', 'Contador', 'CreatedDate' ],
+            attributes: [ 'Nombre','Apellido','Cedula','Titulo','Media','Contenido', 'Contador', 'CreatedDate' ],
             order: [
-              ['Titulo', 'ASC']
+              ['Contador', 'DESC']
             ],
             raw: true,
             limit: 3
@@ -43,14 +45,13 @@ class Publicaciones{
             }
         })
         if(publicacion){
-            let publicacionSumas = this.modelo.update({
-                Contador: publicacion.Contador +1
-            }, {
-                where:{
-                    Cedula : cedula
-                }
+            await this.modelo.increment({Contador: 1}, { where: { Cedula:cedula } })
+            let publi = await this.modelo.findAll({
+               where:{
+                   Cedula : cedula
+               }
             })
-            return publicacionSumas;
+            return publi[0].dataValues;
         }else{
             return {'error':'no existe la publicacion'};
         }

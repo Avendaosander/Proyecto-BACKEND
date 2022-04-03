@@ -40,6 +40,7 @@ class User{
     }
     //ver una publicacion
     async VerPublicacion(cedula){
+        console.log('entra aqui user')
         let publicacion =this.modeloPublicacion.buscarPublicacion(cedula);
         if(publicacion.error){
             return publicacion.error;

@@ -11,16 +11,18 @@ let {Admin} = require('../controllers/classAdmin');
 let usuarios = new User();
 let administradores = new Admin();
 
-const diskstorage = multer.diskStorage({
+const storage = multer.diskStorage({
   destination: path.join(__dirname, '../imagenes'),
-  filename: (req, file, cb) => {
-    cd(null, file.originalname)
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
   }
 })
 
-const fileUpload = multer({
-  storage: diskstorage
-})
+const upload = multer({
+  storage,
+  destination: path.join(__dirname, '../imagenes'),
+  limits: {fileSize: 1000000}
+}).single('media')
 
 /* GET Home page. */
 router.get('/:rol', (req, res) => {
@@ -148,19 +150,6 @@ router.post('/register/:rol', validarUser, (req, res) => {
     res.render('error', { error: 'Rol invalido'})
   }
 });
-/* GET Users page. */
-router.get('/users/:rol', (req, res) => {
-  if (req.params.rol === 'admin' || req.params.rol === 'user') {
-    administradores.ListarUser().then((users)=>{
-      // console.log(useData)
-      res.status(200).render('users', { title: 'Usuarios', users: users, error: '', rol: req.params.rol});
-    }).catch((err)=>{
-      res.render('error', { users: [], error: err });
-    })
-  } else {
-    res.render('error', { error: 'Rol invalido'})
-  }
-});
 /* GET Perfil page. */
 router.get('/perfil/:cedula/:rol', (req, res) => {
   if (req.params.rol === 'admin') {
@@ -171,14 +160,14 @@ router.get('/perfil/:cedula/:rol', (req, res) => {
     })
   } else if (req.params.rol === 'user') {
     administradores.buscarUser(req.params.cedula).then(([userData])=>{
-      res.status(200).render('perfil', { title: 'Perfil', users: userData.dataValues, error: '', rol: req.params.rol});
+      res.status(200).render('perfil', { title: 'Perfil', users: userData, error: '', rol: req.params.rol});
     }).catch((err)=>{
       res.render('error', { user: [], error: err });
     })
   } else {
     res.render('error', { error: 'Rol invalido'})
   }
-});
+}); 
 /* GET Users page. */
 router.get('/users/:rol', (req, res) => {
   if (req.params.rol === 'admin' || req.params.rol === 'user') {
@@ -215,10 +204,11 @@ router.get('/crear-publicacion/:rol', (req, res) => {
     res.render('error', { error: 'Rol invalido'})
   }
 });
-router.post('/crear-publicacion/:rol', validarCampos, (req, res) => {
+router.post('/crear-publicacion/:rol', upload, (req, res) => {
   const { nombre, apellido, cedula, titulo, contenido } = req.body
+  const media = req.file.originalname
   if (req.params.rol === 'admin' || req.params.rol === 'user') {
-    usuarios.CrearPublicacion({ nombre, apellido, cedula, titulo, contenido }).then((nuevo)=>{
+    usuarios.CrearPublicacion({ nombre, apellido, cedula, titulo, media, contenido }).then((nuevo)=>{
       console.log(nuevo)
       if (nuevo) {
         usuarios.VerPublicaciones().then((publicacionesTotal)=>{
@@ -241,9 +231,8 @@ router.post('/crear-publicacion/:rol', validarCampos, (req, res) => {
 /* GET Ver Publication page. */
 router.get('/ver-publicacion/:cedula/:rol', (req, res) => {
   if (req.params.rol === 'admin' || req.params.rol === 'user') {
-    administradores.VerPublicacion(req.params.cedula).then(([publicacion])=>{
-      
-      res.status(200).render('publication', { title: publicacion.dataValues.Titulo, publicacion: publicacion.dataValues, error: '', rol: req.params.rol});
+    administradores.VerPublicacion(req.params.cedula).then((publicacion)=>{ console.log(publicacion)
+      res.status(200).render('publication', { title: publicacion.Titulo, publicacion: publicacion, error: '', rol: req.params.rol});
     }).catch((err)=>{
       res.render('error', { citas: [], error: err });
     })
@@ -263,10 +252,10 @@ router.get('/editar-publicacion/:cedula/:rol', (req, res) => {
     res.render('error', { error: 'Rol invalido'})
   }
 });
-router.post('/editar-publicacion/:cedula/:rol', validarUpdate,(req, res, next) => {
+router.post('/editar-publicacion/:cedula/:rol', validarUpdate, async (req, res, next) => {
   if (req.params.rol === 'admin' || req.params.rol === 'user') {
-    administradores.updatePublicacion(req.params.cedula, req.body);
-    administradores.VerPublicaciones().then((publicacionesTotal)=>{
+    await administradores.updatePublicacion(req.params.cedula, req.body);
+    await administradores.VerPublicaciones().then((publicacionesTotal)=>{
       // console.log(publicacionData)
       res.status(200).render('index', { publicaciones: publicacionesTotal, error: '', rol: req.params.rol });
     }).catch((err)=>{
@@ -341,22 +330,46 @@ router.get('/borrar-publicacion/:cedula/:rol', (req, res, next) => {
   }
 });
 
+router.get('/recuperacion/:rol', (req, res) => {
+  res.render('recuperacion', {title: 'Recuperar Contraseña'})
+})
+
 router.post('/recuperacion/:rol', (req,res)=>{
   if(req.params.rol === 'admin'){
-   administradores.buscarAdminEdit(req.body.Cedula).then(([adm])=>{
-     administradores.CambioPassAdm(req.body.Cedula);
-     let pub = administradores.VerPublicaciones();
-     res.status(200).render('index', { publicaciones: pub, error: '', rol: req.params.rol });
-   }).catch((err)=>{
-    res.render('error', { publicaciones: [], error: err });
+    administradores.buscarAdm(req.body.Email).then(([userData])=>{
+      bcrypt.compare(req.body.Password, userData.Password, function(err, resp) {
+        if (resp) {
+          administradores.buscarAdminEdit(req.body.Email).then(([adm])=>{
+            administradores.CambioPassAdm(req.body.Email);
+            let pub = administradores.VerPublicaciones();
+            res.status(200).render('index', { publicaciones: pub, error: '', rol: req.params.rol });
+          }).catch((err)=>{
+           res.render('error', { publicaciones: [], error: err });
+           })
+        } else {
+          res.status(500).render('error', { user:'', users: [], error: 'Contraseña es incorrecta' });
+        }
+      });
+    }).catch((err)=>{
+      res.status(500).render('error', { user:'', users: [], error: err });
     })
   }else if(req.params.rol === 'user'){
-    usuarios.buscarUser(req.body.Cedula).then((user)=>{
-      usuarios.CambioPass(req.body.Cedula);
-      let pubs = usuarios.VerPublicaciones();
-      res.status(200).render('index', { publicaciones: pubs, error: '', rol: req.params.rol });
+    administradores.buscarUser(req.body.Email).then(([userData])=>{
+      bcrypt.compare(req.body.Password, userData.Password, function(err, resp) {
+        if (resp) {
+          usuarios.buscarUser(req.body.Email).then((user)=>{
+            usuarios.CambioPass(req.body.Email);
+            let pubs = usuarios.VerPublicaciones();
+            res.status(200).render('index', { publicaciones: pubs, error: '', rol: req.params.rol });
+          }).catch((err)=>{
+            res.render('error', { publicaciones: [], error: err });
+          })
+        } else {
+          res.status(500).render('error', { user:'', users: [], error: 'Contraseña es incorrecta' });
+        }
+      });
     }).catch((err)=>{
-     res.render('error', { publicaciones: [], error: err });
+      res.status(500).render('error', { user:'', users: [], error: err });
     })
   }else{
     res.render('error', { error: 'Rol invalido'})

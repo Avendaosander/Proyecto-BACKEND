@@ -5,10 +5,9 @@
          <% if (typeof publicaciones !== 'undefined') { %>
             <% if (publicaciones.length > 0) { %>
                <% publicaciones.forEach( publicacion => { %>
-                  <% console.log(publicacion.Media) %> 
                   <div class="col-md-4 p-2">
                      <div class="card">
-                        <img src=<%= publicacion.Media %> class="card-img-top" alt="Media">
+                        <img src="../imagenes/<%= publicacion.Media %>" class="card-img-top" alt="Media">
                         <div class="card-header">Titulo: <%= publicacion.Titulo %></div>
                         <div class="card-body">
                            <div class="col m-1"><%= publicacion.Contenido %></div>

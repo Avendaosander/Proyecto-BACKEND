@@ -29,7 +29,7 @@ module.exports = (connection) => {
          allowNull: false
       },
       Media: {
-         type: DataTypes.BLOB('medium'),
+         type: DataTypes.STRING(255),
          allowNull: false
       },
       Contador: {
