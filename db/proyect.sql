@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 01-04-2022 a las 16:27:23
+-- Tiempo de generación: 04-04-2022 a las 16:43:57
 -- Versión del servidor: 8.0.28-0ubuntu0.20.04.3
 -- Versión de PHP: 7.4.3
 
@@ -48,7 +48,8 @@ CREATE TABLE `admins` (
 --
 
 INSERT INTO `admins` (`ID`, `Nombre`, `Apellido`, `Email`, `Password`, `Cedula`, `Edad`, `Telefono`, `CreatedDate`, `updatedAt`) VALUES
-(1, 'Alexander', 'Avendaño', 'avendano.ramirez@gmail.com', '$2a$10$mAPNBQxuICN8XqBTrz/LSOX/natsivujYIFVkepb9eIel/Gv9oNku', 29694896, 19, '04265121891', '2022-03-31 16:04:59', '2022-03-31 16:04:59');
+(1, 'Alexander', 'Avendaño', 'avendano.ramirez@gmail.com', '$2a$10$mAPNBQxuICN8XqBTrz/LSOX/natsivujYIFVkepb9eIel/Gv9oNku', 29694896, 19, '04265121891', '2022-03-31 16:04:59', '2022-03-31 16:04:59'),
+(2, 'Jose', 'Ramirez', 'avendano.ramirez@gmail.com', '$2a$10$gSNxktBAtHmkQreEghDxted3H9WRQH6Yx.tgjEpbIxtBlGvmYYeiy', 29694895, 20, '04265121891', '2022-04-03 21:58:17', '2022-04-03 21:58:17');
 
 -- --------------------------------------------------------
 
@@ -63,7 +64,7 @@ CREATE TABLE `publicaciones` (
   `Cedula` int NOT NULL,
   `Titulo` varchar(255) NOT NULL,
   `Contenido` varchar(255) NOT NULL,
-  `Media` mediumblob NOT NULL,
+  `Media` varchar(255) NOT NULL,
   `Contador` int NOT NULL,
   `CreatedDate` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
@@ -74,8 +75,20 @@ CREATE TABLE `publicaciones` (
 --
 
 INSERT INTO `publicaciones` (`ID`, `Nombre`, `Apellido`, `Cedula`, `Titulo`, `Contenido`, `Media`, `Contador`, `CreatedDate`, `updatedAt`) VALUES
-(1, 'Alexander', 'Avendaño', 29694896, 'Titulo de Prueba', 'Nuevo contenido de Prueba', 0x49636f6e6f2d75766d2e706e67, 0, '2022-04-01 16:39:01', '2022-04-01 16:39:01'),
-(2, 'Alexander', 'Ramirez', 2969485, 'Titulo de Prueba', 'JKKALJSKJALKJKLjalkjdklajlk', 0x49636f6e6f2d75766d2e706e67, 0, '2022-04-01 16:45:33', '2022-04-01 16:45:33');
+(4, 'Alexander', 'Ramirez', 29694896, 'Titulo de Prueba', 'Nuevo contenido', '29403-1920x1080.jpg', 12, '2022-04-02 02:46:03', '2022-04-04 17:51:50'),
+(5, 'Jose', 'Ramirez', 29694899, 'Un titulo mas', 'Nuevo contenido Nuevo contenidoNuevo contenidoNuevo contenidoNuevo contenidoNuevo contenido', 'triangle_inverted_black_white_92770_1920x1200.jpg', 19, '2022-04-02 15:56:29', '2022-04-04 19:16:23'),
+(6, 'Alexander', 'Ramirez', 266265, 'Titulo Modificado Otra Vez', 'Nuevo Contenido Modificado Otra vez', '29403-1920x1080.jpg', 17, '2022-04-03 15:50:50', '2022-04-04 19:12:13'),
+(7, 'Douglas', 'Ramirez', 25646545, 'Increible Galaxia', 'Nuevo contenido para realizar pruebas ', 'space_sky_stars_79233_1920x1200.jpg', 1, '2022-04-04 04:30:55', '2022-04-04 04:32:34'),
+(9, 'Juan', 'Perez', 2564654, 'Increible Galaxia', 'Nuevo contenido para realizar pruebas ', '29384-1920x1080.jpg', 0, '2022-04-04 04:32:10', '2022-04-04 04:32:10'),
+(10, 'Jose', 'Rodriguez', 6234581, 'Excelente titulo aqui', 'Nuevo contenido para realizar pruebas ', 'abstraction_sharp_figure_101902_1920x1200.jpg', 0, '2022-04-04 04:33:17', '2022-04-04 04:33:17'),
+(11, 'Alexander', 'Avendaño', 84845145, 'Excelente titulo aqui', 'Nuevo contenido para realizar pruebas ', 'triangle_inverted_black_white_92770_1920x1200.jpg', 0, '2022-04-04 04:33:51', '2022-04-04 04:33:51'),
+(12, 'Alexander', 'Ramirez', 1445784, 'Otro Excelente titulo aqui', 'Nuevo contenido para realizar pruebas ', 'triangle_inverted_black_white_92770_1920x1200.jpg', 0, '2022-04-04 04:34:09', '2022-04-04 04:34:09'),
+(13, 'Freddy', 'Ramirez', 15646556, 'Otro Excelente titulo aqui', 'Nuevo contenido para realizar pruebas ', 'triangle_inverted_black_white_92770_1920x1200.jpg', 0, '2022-04-04 04:34:31', '2022-04-04 04:34:31'),
+(15, 'Angel', 'Arraiz', 5468956, 'Otro Excelente titulo aqui', 'Nuevo contenido para realizar pruebas ', 'triangle_inverted_black_white_92770_1920x1200.jpg', 0, '2022-04-04 04:34:50', '2022-04-04 04:34:50'),
+(16, 'Sara', 'gonzales', 789956431, 'Otro Excelente titulo aqui', 'Nuevo contenido para realizar pruebas ', 'triangle_inverted_black_white_92770_1920x1200.jpg', 6, '2022-04-04 04:35:16', '2022-04-04 17:54:27'),
+(17, 'Alexander', 'avendao', 1516515, 'Un titulo ahi', 'ajksdjnajkndaknsjkankjsnajknj kjasndjandjnasjkn', 'abstraction_shapes_dark_background_115105_1920x1200.jpg', 0, '2022-04-04 17:58:20', '2022-04-04 17:58:20'),
+(19, 'Alexander', 'avendao', 516515, 'Un titulo ahi', 'ajksdjnajkndaknsjkankjsnajknj kjasndjandjnasjkn', 'abstraction_shapes_dark_background_115105_1920x1200.jpg', 0, '2022-04-04 18:03:58', '2022-04-04 18:03:58'),
+(21, 'Alexander', 'avendao', 51651, 'Un titulo ahi', 'ajksdjnajkndaknsjkankjsnajknj kjasndjandjnasjkn', 'abstraction_shapes_dark_background_115105_1920x1200.jpg', 1, '2022-04-04 18:04:36', '2022-04-04 19:26:43');
 
 -- --------------------------------------------------------
 
@@ -94,6 +107,13 @@ CREATE TABLE `users` (
   `CreatedDate` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `users`
+--
+
+INSERT INTO `users` (`ID`, `Nombre`, `Apellido`, `Email`, `Password`, `Cedula`, `Edad`, `CreatedDate`, `updatedAt`) VALUES
+(2, 'Alexander', 'Ramirez', 'avendano.ramirez@gmail.com', '$2a$10$X/2XiapRQD8WAPLO5mQzFeRrf/Rtdlr9oMA62pnQQGJ7eCpNmkpIi', 29694896, 20, '2022-04-03 23:29:37', '2022-04-04 01:01:23');
 
 --
 -- Índices para tablas volcadas
@@ -128,19 +148,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `publicaciones`
 --
 ALTER TABLE `publicaciones`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT;
+  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -8,6 +8,7 @@
          <% if (typeof publicacion !== 'undefined') { %>
             <div class="bg-azul" style="padding: 0;">
                <ul class="content mb-0" style="padding: 0;">
+                  <li class="col text-center"><img src="../imagenes/<%= publicacion.Media %>" " class="card-img-top" style="width: 20rem" alt="Media"></li>
                   <li class="col"><%= publicacion.Contenido %></li>
                   <li class="col">Fecha Creado: <%= publicacion.CreatedDate %></li>
                   <li class="col">Autor: <%= publicacion.Nombre %> <%= publicacion.Apellido %> / C.I: <%= publicacion.Cedula %></li>

@@ -36,21 +36,47 @@
                </div>
                <div class="form-group p-2">
                   <label for="password">Contraseña Actual</label>
-                  <input id="password" type="password" name="Password" class="form-control" placeholder="Password" required/>
+                  <input id="passwordOld" type="password" name="PasswordOld" class="form-control" placeholder="Password" required/>
                </div>
                <div class="form-group p-2">
                   <label for="password">Contraseña Nueva</label>
-                  <input id="password" type="password" name="Password" class="form-control" placeholder="Password" required/>
+                  <input id="password" type="password" onchange="obtenerValores()" name="Password" class="form-control" placeholder="Password" required/>
+               </div>
+               <div class="form-group" hidden  id="error">
+                  <p class="text-danger p-2 m-1">Contraseñas no son iguales, intentelo de nuevo</p>
                </div>
                <div class="form-group p-2">
                   <label for="password">Repetir Contraseña Nueva</label>
-                  <input id="password" type="password" name="Password" class="form-control" placeholder="Password" required/>
+                  <input id="passwordRepeat" type="password" onchange="obtenerValores()" name="PasswordRepeat" class="form-control" placeholder="Password" required/>
+               </div>
+               <div class="form-group" hidden id="error">
+                  <p class="text-danger p-2 m-1">Contraseñas no son iguales, intentelo de nuevo</p>
                </div>
                <input id="rol" type="text" value="user" hidden name="rol" class="form-control" required/>
-               <input type="submit" value="Iniciar Sesion" class="btn btn-dark m-2">
+               <input type="submit" id="submit" disabled value="Iniciar Sesion" class="btn btn-dark m-2">
             </form>
          </div>
       </div>
    </div>
 </body>
+
+<script>
+   function obtenerValores() {
+      let passw = document.getElementById('password').value
+      let passwRep = document.getElementById('passwordRepeat').value
+      let submit = document.getElementById('submit')
+      let err = document.querySelectorAll('#error')
+      if (passw == passwRep) {
+         err.forEach(error => {
+            error.setAttribute("hidden", false)
+         });
+         submit.removeAttribute('disabled')
+      } else {
+         err.forEach(error => {
+            error.removeAttribute('hidden')
+         });
+         submit.setAttribute('disabled', true)
+      }
+   }
+</script>
 <%- include("templates/footer") %>

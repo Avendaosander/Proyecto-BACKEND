@@ -26,7 +26,17 @@ class Publicaciones{
         })
         return nuevo;
     }
-    async verPublicaciones(){
+    async verPublicaciones(page, size){
+        let totalPublicaciones = await tablesPosts.publicaciones.findAndCountAll({
+            limit: size,
+            offset: page * size,
+            order: [
+              ['CreatedDate', 'DESC']
+            ]
+        })
+        return totalPublicaciones;
+    }
+    async verPublicacionesRelevantes(){
         let totalPublicaciones = await this.modelo.findAll({
             attributes: [ 'Nombre','Apellido','Cedula','Titulo','Media','Contenido', 'Contador', 'CreatedDate' ],
             order: [

@@ -1,4 +1,4 @@
-const {tablesUsers, database} = require('../db/db');
+const {tablesUsers, tablesPosts} = require('../db/db');
 const { Publicaciones } = require('./classPublicaciones');
 const {Op} = require('sequelize');
 let nuevaPublicacion = new Publicaciones();
@@ -34,13 +34,17 @@ class User{
     }
 
     //LISTA TODAS LAS PUBLICACIONES
-    VerPublicaciones(){
-        let publicacionesTotal= this.modeloPublicacion.verPublicaciones();
+    VerPublicaciones(page, size){
+        let publicacionesTotal= this.modeloPublicacion.verPublicaciones(page, size);
+        return publicacionesTotal;
+    }
+    //LISTA TODAS LAS PUBLICACIONES
+    VerPublicacionesRelevantes(){
+        let publicacionesTotal= this.modeloPublicacion.verPublicacionesRelevantes();
         return publicacionesTotal;
     }
     //ver una publicacion
     async VerPublicacion(cedula){
-        console.log('entra aqui user')
         let publicacion =this.modeloPublicacion.buscarPublicacion(cedula);
         if(publicacion.error){
             return publicacion.error;
@@ -75,12 +79,12 @@ class User{
     }
 
     //CambiarClave
-    async CambioPass(cedula, newPass){
+    async CambioPass(email, newPass){
         let newClave = await this.modeloUser.update({
             Password : newPass
         },{
             where: {
-                Cedula: cedula
+                Email: email
             }
         }); 
         return newClave;

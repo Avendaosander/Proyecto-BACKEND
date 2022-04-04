@@ -27,7 +27,7 @@ const upload = multer({
 /* GET Home page. */
 router.get('/:rol', (req, res) => {
   if (req.params.rol === 'admin' || req.params.rol === 'user') {
-    usuarios.VerPublicaciones().then((publicacionesTotal)=>{
+    usuarios.VerPublicacionesRelevantes().then((publicacionesTotal)=>{
       res.status(200).render('index', { publicaciones: publicacionesTotal, error: '', rol: req.params.rol });
     }).catch((err)=>{
       res.render('error', { publicaciones: [], error: err });
@@ -46,7 +46,6 @@ router.post('/iniciar/login', (req, res) => {
       bcrypt.compare(req.body.Password, userData.Password, function(err, resp) {
         if (resp) {
           administradores.VerPublicaciones().then((publicacionesTotal)=>{
-            // console.log(publicacionData)
             res.status(200).render('index', { publicaciones: publicacionesTotal, error: '', rol: req.body.rol });
           }).catch((err)=>{
             res.render('error', { publicaciones: [], error: err });
@@ -112,29 +111,12 @@ router.get('/register/:rol', (req, res) => {
 });
 router.post('/register/:rol', validarUser, (req, res) => {
   const { nombre, apellido, edad, cedula, email, password} = req.body
-  if (req.params.rol === 'admin') {
-    let {telefono} = req.body;
-    let passwordHash = bcrypt.hashSync(password, 10);
-    administradores.agregarAdmin({ nombre, apellido, edad, cedula, email, passwordHash,telefono}).then(([admin, created])=>{
-      if (created) {
-        administradores.VerPublicaciones().then((publicacionesTotal)=>{
-          // console.log(publicacionesTotal)
-          res.status(200).render('index', { publicaciones: publicacionesTotal, error: '', rol: req.params.rol });
-        }).catch((err)=>{
-          res.render('error', { publicaciones: [], error: err });
-        })
-      } else {
-        res.status(400).render('register', { title: 'Registrar un nuevo Administrador', error: 'El Administrador de cedula: '+admin.dataValues.Cedula+' ya está registrado en el sistema', rol : req.params.rol });
-      }
-    }).catch((err)=>{
-      res.status(500).render('error', { user:'', users: [], error: err });
-    })
-  } else if (req.params.rol === 'user'){
+  if (req.params.rol === 'user'){
     let passwordHash = bcrypt.hashSync(password, 10);
     console.log(passwordHash);
     usuarios.agregarUser({ nombre, apellido, edad, cedula, email, passwordHash }).then(([user, created])=>{
       if (created) {
-        usuarios.VerPublicaciones().then((publicacionesTotal)=>{
+        usuarios.VerPublicacionesRelevantes().then((publicacionesTotal)=>{
           // console.log(publicacionesTotal)
           res.status(200).render('index', { publicaciones: publicacionesTotal, error: '', rol: req.params.rol });
         }).catch((err)=>{
@@ -153,13 +135,13 @@ router.post('/register/:rol', validarUser, (req, res) => {
 /* GET Perfil page. */
 router.get('/perfil/:cedula/:rol', (req, res) => {
   if (req.params.rol === 'admin') {
-    administradores.buscarAdm(req.params.cedula).then(([adm])=>{
+    administradores.perfil(req.params.cedula).then(([adm])=>{
       res.status(200).render('perfil', { title: 'Perfil', users: adm, error: '', rol: req.params.rol});
     }).catch((err)=>{
       res.render('error', { user: [], error: err });
     })
   } else if (req.params.rol === 'user') {
-    administradores.buscarUser(req.params.cedula).then(([userData])=>{
+    administradores.perfilUser(req.params.cedula).then(([userData])=>{
       res.status(200).render('perfil', { title: 'Perfil', users: userData, error: '', rol: req.params.rol});
     }).catch((err)=>{
       res.render('error', { user: [], error: err });
@@ -182,14 +164,25 @@ router.get('/users/:rol', (req, res) => {
   }
 });
 /* GET Publications page. */
-router.get('/publicaciones/:rol', (req, res) => {
+router.get('/publicaciones/:rol', async (req, res) => {
+  const pageAsNumber = Number.parseInt(req.query.page)
+  const sizeAsNumber = Number.parseInt(req.query.size)
+
+  let page = 0
+  if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
+    page = pageAsNumber
+  }
+
+  let size = 10
+  if (!Number.isNaN(sizeAsNumber) && sizeAsNumber > 0 && sizeAsNumber < 10) {
+    size = sizeAsNumber
+  }
   if (req.params.rol === 'admin' || req.params.rol === 'user') {
-    usuarios.VerPublicaciones().then((publicacionesTotal)=>{
-      // console.log(publicacionData)
-      res.status(200).render('publicaciones', { title: 'Publicaciones', publicaciones: publicacionesTotal, error: '', rol: req.params.rol });
+    await usuarios.VerPublicaciones(page, size).then((publicacionData)=>{
+      res.status(200).render('publicaciones', { title: 'Publicaciones', publicaciones: publicacionData.rows, page, size, totalPages: Math.ceil(publicacionData.count / size), error: '', rol: req.params.rol });
     }).catch((err)=>{
       res.render('error', { publicaciones: [], error: err });
-    });
+    })
   }else{
     res.render('error', { error: 'Rol invalido'})
   }
@@ -207,13 +200,25 @@ router.get('/crear-publicacion/:rol', (req, res) => {
 router.post('/crear-publicacion/:rol', upload, (req, res) => {
   const { nombre, apellido, cedula, titulo, contenido } = req.body
   const media = req.file.originalname
+  const pageAsNumber = Number.parseInt(req.query.page)
+  const sizeAsNumber = Number.parseInt(req.query.size)
+
+  let page = 0
+  if (!Number.isNaN(pageAsNumber) && pageAsNumber > 0) {
+    page = pageAsNumber
+  }
+
+  let size = 10
+  if (!Number.isNaN(sizeAsNumber) && sizeAsNumber > 0 && sizeAsNumber < 10) {
+    size = sizeAsNumber
+  }
   if (req.params.rol === 'admin' || req.params.rol === 'user') {
     usuarios.CrearPublicacion({ nombre, apellido, cedula, titulo, media, contenido }).then((nuevo)=>{
       console.log(nuevo)
       if (nuevo) {
-        usuarios.VerPublicaciones().then((publicacionesTotal)=>{
+        usuarios.VerPublicaciones(page, size).then((publicacionesTotal)=>{
           // console.log(publicacionData)
-          res.status(200).render('publicaciones', { title: 'Publicaciones', publicacion: nuevo , publicaciones: publicacionesTotal, error: '', rol: req.params.rol});
+          res.status(200).render('publicaciones', { title: 'Publicaciones', publicaciones: publicacionesTotal, page, size, totalPages: Math.ceil(publicacionData.count / size), error: '', rol: req.params.rol});
         }).catch((err)=>{
           res.status(500).render('error', { publicacion:'', publicaciones: [], error: err });
         })
@@ -231,7 +236,7 @@ router.post('/crear-publicacion/:rol', upload, (req, res) => {
 /* GET Ver Publication page. */
 router.get('/ver-publicacion/:cedula/:rol', (req, res) => {
   if (req.params.rol === 'admin' || req.params.rol === 'user') {
-    administradores.VerPublicacion(req.params.cedula).then((publicacion)=>{ console.log(publicacion)
+    administradores.VerPublicacion(req.params.cedula).then((publicacion)=>{
       res.status(200).render('publication', { title: publicacion.Titulo, publicacion: publicacion, error: '', rol: req.params.rol});
     }).catch((err)=>{
       res.render('error', { citas: [], error: err });
@@ -255,7 +260,7 @@ router.get('/editar-publicacion/:cedula/:rol', (req, res) => {
 router.post('/editar-publicacion/:cedula/:rol', validarUpdate, async (req, res, next) => {
   if (req.params.rol === 'admin' || req.params.rol === 'user') {
     await administradores.updatePublicacion(req.params.cedula, req.body);
-    await administradores.VerPublicaciones().then((publicacionesTotal)=>{
+    await administradores.VerPublicacionesRelevantes().then((publicacionesTotal)=>{
       // console.log(publicacionData)
       res.status(200).render('index', { publicaciones: publicacionesTotal, error: '', rol: req.params.rol });
     }).catch((err)=>{
@@ -317,7 +322,7 @@ router.get('/borrar-usuario/:cedula/:rol', async(req, res, next) => {
 router.get('/borrar-publicacion/:cedula/:rol', (req, res, next) => {
   if (req.params.rol === 'admin') {
     administradores.deletePublicacion(req.params.cedula);
-    administradores.VerPublicaciones().then((publicacionesTotal)=>{
+    administradores.VerPublicacionesRelevantes().then((publicacionesTotal)=>{
       // console.log(publicacionesTotal)
       res.status(200).render('index', { publicaciones: publicacionesTotal, error: '', rol: req.params.rol });
     }).catch((err)=>{
@@ -337,11 +342,11 @@ router.get('/recuperacion/:rol', (req, res) => {
 router.post('/recuperacion/:rol', (req,res)=>{
   if(req.params.rol === 'admin'){
     administradores.buscarAdm(req.body.Email).then(([userData])=>{
-      bcrypt.compare(req.body.Password, userData.Password, function(err, resp) {
+      bcrypt.compare(req.body.PasswordOld, userData.Password, function(err, resp) {
         if (resp) {
           administradores.buscarAdminEdit(req.body.Email).then(([adm])=>{
-            administradores.CambioPassAdm(req.body.Email);
-            let pub = administradores.VerPublicaciones();
+            administradores.CambioPassAdm(req.body.Email, bcrypt.hashSync(req.body.Password, 10))
+            let pub = administradores.VerPublicacionesRelevantes();
             res.status(200).render('index', { publicaciones: pub, error: '', rol: req.params.rol });
           }).catch((err)=>{
            res.render('error', { publicaciones: [], error: err });
@@ -355,11 +360,12 @@ router.post('/recuperacion/:rol', (req,res)=>{
     })
   }else if(req.params.rol === 'user'){
     administradores.buscarUser(req.body.Email).then(([userData])=>{
-      bcrypt.compare(req.body.Password, userData.Password, function(err, resp) {
+      console.log(userData)
+      bcrypt.compare(req.body.PasswordOld, userData.Password, function(err, resp) {
         if (resp) {
-          usuarios.buscarUser(req.body.Email).then((user)=>{
-            usuarios.CambioPass(req.body.Email);
-            let pubs = usuarios.VerPublicaciones();
+          administradores.buscarUser(req.body.Email).then((user)=>{
+            usuarios.CambioPass(req.body.Email, bcrypt.hashSync(req.body.Password, 10));
+            let pubs = usuarios.VerPublicacionesRelevantes();
             res.status(200).render('index', { publicaciones: pubs, error: '', rol: req.params.rol });
           }).catch((err)=>{
             res.render('error', { publicaciones: [], error: err });

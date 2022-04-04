@@ -21,8 +21,8 @@ class Admin extends User{
     }
     
 
-    //BUSCAR ADMIN
-    async buscarAdm(cedula){
+    //PERFIL ADMIN
+    async perfil(cedula){
         let adm = await this.modeloAdm.findAll({
             where:{
                 Cedula : cedula
@@ -30,21 +30,44 @@ class Admin extends User{
         })
         return adm;
     }
-    buscarAdminEdit(email){
+    //PERFIL USER
+    async perfilUser(cedula){
+        let adm = await this.modeloUser.findAll({
+            where:{
+                Cedula : cedula
+            }
+        })
+        return adm;
+    }
+    //BUSCAR ADMIN
+    async buscarAdm(email){
+        let adm = await this.modeloAdm.findAll({
+            where:{
+                Email : email
+            }
+        })
+        return adm;
+    }
+    buscarAdminEdit(cedula){
         let adminis = this.modeloAdm.findAll({
-            where: {Email:email}
+            where: {Cedula:cedula}
         })
         return adminis;
         
     }
     //buscar user
-    async buscarUser(correo){
+    async buscarUser(email){
         let usuario = await this.modeloUser.findAll({
             where:{
-                Email : correo
+                Email : email
             }
         })
         return usuario;
+    }
+    //LISTA TODAS LAS PUBLICACIONES
+    VerPublicacionesRelevantes(){
+        let publicacionesTotal= this.modeloPublicacion.verPublicacionesRelevantes();
+        return publicacionesTotal;
     }
     //ver una publicacion
     async VerPublicacion(cedula){
@@ -106,12 +129,12 @@ class Admin extends User{
         });
     }
 
-    async CambioPassAdm(cedula, newPass){
+    async CambioPassAdm(email, newPass){
         let newClave = await this.modeloAdm.update({
             Password : newPass
         },{
             where: {
-                Cedula: cedula
+                Email: email
             }
         }); 
         return newClave;

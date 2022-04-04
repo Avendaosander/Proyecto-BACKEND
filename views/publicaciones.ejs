@@ -1,28 +1,33 @@
 <%- include("templates/header", {tituloWeb: 'Publicaciones'}) %>
    <h2 class="text-center mt-5"><%= title %></h2>
-   <div class="container p-2">
-      <div class="row d-flex flex-row justify-content-center">
+   <div class="mt-4 mb-4" style="background-color: rgba(0, 0, 0, 0.2);">
+      <div class="container p-2">
          <% if (typeof publicaciones !== 'undefined') { %>
             <% if (publicaciones.length > 0) { %>
                <% publicaciones.forEach( publicacion => { %>
-                  <div class="col-md-4 p-2">
-                     <div class="card">
-                        <img src="../imagenes/<%= publicacion.Media %>" class="card-img-top" alt="Media">
-                        <div class="card-header">Titulo: <%= publicacion.Titulo %></div>
-                        <div class="card-body">
-                           <div class="col m-1"><%= publicacion.Contenido %></div>
-                           <div class="col m-1">Fecha: <%= publicacion.CreatedDate %></div>
-                           <div class="col m-1">Autor: <%= publicacion.Nombre %> <%= publicacion.Apellido %> / C.I: <%= publicacion.Cedula %></div>
+                  <div class="row ">
+                     <div class="col p-2 d-flex flex-row justify-content-around mb-3" >
+                        <div class="iamgen" style="width: 20rem">
+                           <img src="../imagenes/<%= publicacion.Media %>" " class="card-img-top" alt="Media">
                         </div>
-                        <% if (rol == 'admin') { %>
-                           <div class="card-footer">
-                              <div class="nav justify-content-around">
-                                 <a href="/ver-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-primary"> Ver </a>
+                        <div class=""style="width: 40rem; font-size: 18px;">
+                           <div class="text-center mt-3"><a href="/ver-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="text-light" style="text-decoration: none; font-size: 25px;" ><%= publicacion.Titulo %></a></div>
+                           <div class="">
+                              <div class="text-light text-truncate col m-1" style="max-width: 500px;">Una breve descripción: <%= publicacion.Contenido %></div>
+                              <div class="text-light text-truncate col m-1" style="max-width: 500px;">Fecha: <%= publicacion.CreatedDate %></div>
+                              <div class="text-light col m-1">Autor: <%= publicacion.Nombre %> <%= publicacion.Apellido %></div>
+                              <div class="text-light col m-1 mt-3 text-end"><i class="fa-solid fa-eye"></i> <%= publicacion.Contador %></div>
+                           </div>
+                        </div>
+                        <div class="d-flex" style="align-content: space-around;">
+                           <div class="nav flex-column justify-content-around">
+                              <a href="/ver-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-primary"> Ver </a>
+                              <% if (rol == 'admin') { %>
                                  <a href="/editar-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-warning"> Editar </a>
                                  <a href="/borrar-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-danger"> Borrar </a>
-                              </div>
+                              <% } %>
                            </div>
-                        <% } %>
+                        </div>
                      </div>
                   </div>
                <% }) %>
@@ -34,13 +39,17 @@
          <% } %>
       </div>
    </div>
-   <nav aria-label="Page navigation example">
+   <nav aria-label="Page navigation example" style="margin-bottom: 6rem">
       <ul class="pagination justify-content-center">
-        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+         <% if (page > 0) { %>
+            <li class="page-item"><a class="page-link" href="/publicaciones/admin?page=<%= page - 1 %>&size=<%= size %>">Previous</a></li>
+         <% } %>
+         <% for (let i = 0; i < totalPages; i++) { %>
+            <li class="page-item"><a class="page-link" href="/publicaciones/admin?page=<%= i %>&size=<%= size %>"><%= i + 1 %> </a></li>
+         <% } %> 
+         <% if (page+1 < totalPages) { %>
+            <li class="page-item"><a class="page-link" href="/publicaciones/admin?page=<%= page + 1 %>&size=<%= size %>">Next</a></li>
+         <% } %>
       </ul>
     </nav>
 </body>
