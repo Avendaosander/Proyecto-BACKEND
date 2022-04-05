@@ -13,6 +13,7 @@ class User{
         this.password = null;
         this.cedula = null;
         this.edad = null;
+        this.rol;
     }
 
     //guardar usuarios
@@ -22,10 +23,20 @@ class User{
               Email:data.email, Cedula:data.cedula
             },
             defaults: {
-              Nombre:data.nombre, Apellido:data.apellido, Email:data.email, Password:data.passwordHash, Cedula:data.cedula, Edad:data.edad
+              Nombre:data.nombre, Apellido:data.apellido, Email:data.email, Password:data.passwordHash, Cedula:data.cedula, Edad:data.edad, Rol: data.rol
             }
         });
         return [user, created];
+    }
+
+    //BUSCAR DataUSer
+    async buscarUser(email){
+        let user = await this.modeloUser.findAll({
+            where:{
+                Email : email
+            }
+        })
+        return user;
     }
     //CREAR PUBLICACION
     CrearPublicacion(data){

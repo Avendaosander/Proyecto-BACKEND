@@ -11,14 +11,16 @@
    <style>
       body{
          width: 100%;
-         background: -webkit-linear-gradient(-135deg, #94ebcd, rgba(11, 1, 104, 0.8));
-         background: -o-linear-gradient(-135deg, #94ebcd, rgba(11, 1, 104, 0.8));
-         background: -moz-linear-gradient(-135deg, #94ebcd, rgba(11, 1, 104, 0.8));
-         background: linear-gradient(-135deg, #94ebcd, rgba(11, 1, 104, 0.8));
+         background: rgb(45,45,135);
+         background: linear-gradient(90deg, rgba(45,45,135,0.9920343137254902) 25%, rgba(148,235,205,1) 100%);
+      }
+      .error{
+         margin-top: 5rem;
+         padding: 10px;
       }
    </style>
-</head>
+</head> 
 <body>
-   <p class="m-2"><%= error %></p>
+   <p class="m-2"><center><h1 class="error"><%= error %></h1></center></p>
 </body>
 <%- include("templates/footer") %>

@@ -31,13 +31,13 @@ USE `proyect`;
 --
 
 CREATE TABLE `admins` (
-  `ID` int NOT NULL,
+  `ID` int(11) NOT NULL,
   `Nombre` varchar(255) NOT NULL,
   `Apellido` varchar(255) NOT NULL,
   `Email` varchar(255) NOT NULL,
   `Password` varchar(255) NOT NULL,
-  `Cedula` int NOT NULL,
-  `Edad` int NOT NULL,
+  `Cedula` int(11) NOT NULL,
+  `Edad` int(2) NOT NULL,
   `Telefono` varchar(1234) NOT NULL,
   `CreatedDate` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
@@ -58,14 +58,14 @@ INSERT INTO `admins` (`ID`, `Nombre`, `Apellido`, `Email`, `Password`, `Cedula`,
 --
 
 CREATE TABLE `publicaciones` (
-  `ID` int NOT NULL,
+  `ID` int(11) NOT NULL,
   `Nombre` varchar(255) NOT NULL,
   `Apellido` varchar(255) NOT NULL,
-  `Cedula` int NOT NULL,
+  `Cedula` int(11) NOT NULL,
   `Titulo` varchar(255) NOT NULL,
   `Contenido` varchar(255) NOT NULL,
   `Media` varchar(255) NOT NULL,
-  `Contador` int NOT NULL,
+  `Contador` int(11) NOT NULL,
   `CreatedDate` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -93,17 +93,31 @@ INSERT INTO `publicaciones` (`ID`, `Nombre`, `Apellido`, `Cedula`, `Titulo`, `Co
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `sessions`
+--
+
+CREATE TABLE `sessions` (
+  `session_id` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `expires` int(11) UNSIGNED NOT NULL,
+  `data` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `users`
 --
 
 CREATE TABLE `users` (
-  `ID` int NOT NULL,
+  `ID` int(11) NOT NULL,
   `Nombre` varchar(255) NOT NULL,
   `Apellido` varchar(255) NOT NULL,
   `Email` varchar(255) NOT NULL,
   `Password` varchar(255) NOT NULL,
-  `Cedula` int NOT NULL,
-  `Edad` int NOT NULL,
+  `Cedula` int(11) NOT NULL,
+  `Edad` int(2) NOT NULL,
+  `rol` varchar(30) NOT NULL,
   `CreatedDate` datetime NOT NULL,
   `updatedAt` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -112,8 +126,8 @@ CREATE TABLE `users` (
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`ID`, `Nombre`, `Apellido`, `Email`, `Password`, `Cedula`, `Edad`, `CreatedDate`, `updatedAt`) VALUES
-(2, 'Alexander', 'Ramirez', 'avendano.ramirez@gmail.com', '$2a$10$X/2XiapRQD8WAPLO5mQzFeRrf/Rtdlr9oMA62pnQQGJ7eCpNmkpIi', 29694896, 20, '2022-04-03 23:29:37', '2022-04-04 01:01:23');
+INSERT INTO `users` (`ID`, `Nombre`, `Apellido`, `Email`, `Password`, `Cedula`, `Edad`, `Rol`, `CreatedDate`, `updatedAt`) VALUES
+(2, 'Alexander', 'Ramirez', 'avendano.ramirez@gmail.com', '$2a$10$X/2XiapRQD8WAPLO5mQzFeRrf/Rtdlr9oMA62pnQQGJ7eCpNmkpIi', 29694896, 20, 'user', '2022-04-03 23:29:37', '2022-04-04 01:01:23');
 
 --
 -- Índices para tablas volcadas
@@ -134,6 +148,13 @@ ALTER TABLE `publicaciones`
   ADD UNIQUE KEY `publicaciones__cedula` (`Cedula`);
 
 --
+-- Indices de la tabla `sessions`
+--
+ALTER TABLE `sessions`
+  ADD PRIMARY KEY (`session_id`);
+
+
+--
 -- Indices de la tabla `users`
 --
 ALTER TABLE `users`
@@ -148,19 +169,19 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `publicaciones`
 --
 ALTER TABLE `publicaciones`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `ID` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

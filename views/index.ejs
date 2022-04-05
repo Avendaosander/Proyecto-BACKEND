@@ -20,7 +20,7 @@
                               <img src="../imagenes/<%= publicacion.Media %>"  class="card-img-top" alt="Media">
                            </div>
                            <div class=""style="font-size: 18px;">
-                              <div class="text-center mt-3"><a href="/ver-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="text-light" style="text-decoration: none; font-size: 25px;" ><%= publicacion.Titulo %></a></div>
+                              <div class="text-center mt-3"><a href="/ver-publicacion/<%= publicacion.Cedula %>/<%= sesionUser.Rol %>" class="text-light" style="text-decoration: none; font-size: 25px;" ><%= publicacion.Titulo %></a></div>
                               <div class="">
                                  <div class="text-light text-truncate col m-1" style="max-width: 500px;">Una breve descripción: <%= publicacion.Contenido %></div>
                                  <div class="text-light text-truncate col m-1" style="max-width: 500px;">Fecha: <%= publicacion.CreatedDate %></div>
@@ -30,7 +30,7 @@
                            </div>
                            <div class="d-flex" style="align-items: center">
                               <div class="nav justify-content-around">
-                                 <a href="/ver-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-primary"> Ver </a>
+                                 <a href="/ver-publicacion/<%= publicacion.Cedula %>/<%= sesionUser.Rol %>" class="btn btn-primary"> Ver </a>
                               </div>
                            </div>
                         </div>

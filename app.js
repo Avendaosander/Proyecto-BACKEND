@@ -10,6 +10,23 @@ const indexRouter = require('./routes/index');
 
 const app = express();
 
+const options = {
+   host: 'localhost',
+   port: 3306,
+   user: 'root',
+   password: '',
+   database: 'proyect'
+}
+
+const sessionStore = new MySQLStore(options);
+app.use(session({
+   key:'cookie_user',
+   secret: 'claveclave',
+   store: sessionStore,
+   resave: false,
+   saveUninitialized: false
+}))
+
 app.set("view engine", "ejs")
 app.set("views", __dirname + "/views")
 

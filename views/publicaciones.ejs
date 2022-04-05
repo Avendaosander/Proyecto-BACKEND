@@ -22,10 +22,6 @@
                         <div class="d-flex" style="align-content: space-around;">
                            <div class="nav flex-column justify-content-around">
                               <a href="/ver-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-primary"> Ver </a>
-                              <% if (rol == 'admin') { %>
-                                 <a href="/editar-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-warning"> Editar </a>
-                                 <a href="/borrar-publicacion/<%= publicacion.Cedula %>/<%= rol %>" class="btn btn-danger"> Borrar </a>
-                              <% } %>
                            </div>
                         </div>
                      </div>

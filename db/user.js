@@ -31,6 +31,10 @@ module.exports = (connection) => {
       Edad: {
          type: DataTypes.INTEGER(2),
          allowNull: false
+      },
+      Rol: {
+         type: DataTypes.STRING(10),
+         allowNull: false
       }
    },{
       createdAt:"CreatedDate",

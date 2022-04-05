@@ -71,7 +71,6 @@ class Admin extends User{
     }
     //ver una publicacion
     async VerPublicacion(cedula){
-        console.log('entra aqui admin')
         let publicacion =this.modeloPublicacion.buscarPublicacion(cedula);
         if(publicacion.error){
             return publicacion.error;
