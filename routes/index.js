@@ -45,7 +45,7 @@ router.post('/iniciar/login', (req, res) => {
     administradores.buscarAdm(req.body.Email).then(([userData])=>{
       bcrypt.compare(req.body.Password, userData.Password, function(err, resp) {
         if (resp) {
-          administradores.VerPublicaciones().then((publicacionesTotal)=>{
+          administradores.VerPublicacionesRelevantes().then((publicacionesTotal)=>{
             res.status(200).render('index', { publicaciones: publicacionesTotal, error: '', rol: req.body.rol });
           }).catch((err)=>{
             res.render('error', { publicaciones: [], error: err });
@@ -61,7 +61,7 @@ router.post('/iniciar/login', (req, res) => {
     administradores.buscarUser(req.body.Email).then(([userData])=>{
      bcrypt.compare(req.body.Password, userData.Password, function(err, resp) {
          if (resp) {
-           usuarios.VerPublicaciones().then((publicacionesTotal)=>{
+           usuarios.VerPublicacionesRelevantes().then((publicacionesTotal)=>{
              res.status(200).render('index', { publicaciones: publicacionesTotal, error: '', rol: req.body.rol });
            }).catch((err)=>{
              res.render('error', { publicaciones: [], error: err });
